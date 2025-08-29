@@ -1,0 +1,3 @@
+com.conggua.common.oss.cos.autoconfigure.COSConfiguration
+com.conggua.common.oss.minio.autoconfigure.MinIOConfiguration
+com.conggua.common.oss.oss.autoconfigure.OSSConfiguration
