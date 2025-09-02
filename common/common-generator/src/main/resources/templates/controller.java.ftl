@@ -2,7 +2,7 @@ package ${package.Controller};
 
 import com.conggua.common.base.common.Result;
 import com.conggua.common.base.common.ResultUtils;
-import com.conggua.common.web.model.request.PrimaryKeyParam;
+import com.conggua.common.web.model.request.PrimaryKeyDTO;
 import com.conggua.common.web.model.response.CommonPage;
 import ${package.Entity}.${entity};
 import ${package.Service}.${table.serviceName};
@@ -50,8 +50,8 @@ public class ${table.controllerName} {
 
     @Operation(summary = "删除")
     @PostMapping("/delete")
-    public Result<?> delete(@Validated @RequestBody PrimaryKeyParam param) {
-        ${table.entityPath}Service.removeById(param.getId());
+    public Result<?> delete(@Validated @RequestBody PrimaryKeyDTO dto) {
+        ${table.entityPath}Service.removeById(dto.getId());
         return ResultUtils.success();
     }
 

@@ -38,7 +38,7 @@ public class Gen {
     public static void main(String[] args) {
         // 加载properties文件
         YamlPropertiesFactoryBean factory = new YamlPropertiesFactoryBean();
-        factory.setResources(new ClassPathResource("application.yaml"));
+        factory.setResources(new ClassPathResource("application-dev.yaml"));
         Properties properties = factory.getObject();
         Assert.notNull(properties, "配置文件不存在");
         // 获取数据库配置值

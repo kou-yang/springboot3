@@ -7,7 +7,11 @@ import ${package.Parent}.model.dto.${entity}UpdateDTO;
 import ${package.Parent}.model.dto.${entity}PageDTO;
 import ${package.Parent}.model.vo.${entity}VO;
 import com.conggua.common.web.model.response.CommonPage;
+import org.apache.commons.collections4.CollectionUtils;
 
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -18,6 +22,14 @@ import java.util.List;
 interface ${table.serviceName} : ${superServiceClass}<${entity}>
 <#else>
 public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
+
+    @Override
+    default List<${entity}> listByIds(Collection<? extends Serializable> idList) {
+        if (CollectionUtils.isEmpty(idList)) {
+            return Collections.emptyList();
+        }
+        return ${superServiceClass}.super.listByIds(idList);
+    }
 
     /**
      * 保存

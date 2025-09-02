@@ -9,7 +9,7 @@ import lombok.Data;
  * @date 2024-04-22 17:33
  */
 @Data
-public class PrimaryKeyParam {
+public class PrimaryKeyDTO {
 
     @NotBlank
     private String id;
