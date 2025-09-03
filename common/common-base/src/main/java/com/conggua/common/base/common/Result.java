@@ -3,6 +3,7 @@ package com.conggua.common.base.common;
 import com.conggua.common.base.exception.CommonErrorEnum;
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -14,12 +15,11 @@ import java.io.Serializable;
 @Data
 public class Result<T> implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -1L;
 
     private Integer code;
-
     private T data;
-
     private String message;
 
     public Result(Integer code, T data, String message) {

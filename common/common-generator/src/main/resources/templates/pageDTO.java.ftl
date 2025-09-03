@@ -1,6 +1,6 @@
 package ${pageDTOPackage};
 
-import com.conggua.common.web.model.request.CommonPageRequest;
+import com.conggua.common.web.model.request.CommonPageDTO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -10,5 +10,5 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class ${entity}PageDTO extends CommonPageRequest {
+public class ${entity}PageDTO extends CommonPageDTO {
 }

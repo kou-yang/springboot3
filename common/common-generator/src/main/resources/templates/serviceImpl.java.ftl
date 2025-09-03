@@ -44,6 +44,8 @@ public class ${table.serviceImplName} extends ServiceImpl<${table.mapperName}, $
     @Override
     public CommonPage<${entity}VO> page(${entity}PageDTO dto) {
         Page<${entity}> page = Page.of(dto.getPageIndex(), dto.getPageSize());
+        // 添加排序
+        page = dto.addOrder(page, dto.getSort(), ${entity}.class);
         page = lambdaQuery().page(page);
         // entity转vo
         List<${entity}VO> voList = this.entityList2VOList(page.getRecords());

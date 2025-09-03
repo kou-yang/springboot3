@@ -2,6 +2,7 @@ package com.conggua.common.web.model.response;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.github.pagehelper.PageInfo;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,7 +20,9 @@ import java.util.List;
 @AllArgsConstructor
 public class CommonPage<T> {
 
+    @Schema(description = "数据列表")
     private List<T> record;
+    @Schema(description = "数据总条数")
     private Long total;
 
     public static <T> CommonPage<T> restPage(List<T> list, Long total) {

@@ -1,5 +1,6 @@
 package com.conggua.common.web.model.request;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
@@ -11,6 +12,7 @@ import lombok.Data;
 @Data
 public class PrimaryKeyDTO {
 
+    @Schema(description = "主键id")
     @NotBlank
     private String id;
 }
