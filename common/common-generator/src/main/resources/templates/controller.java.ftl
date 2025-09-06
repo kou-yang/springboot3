@@ -2,6 +2,7 @@ package ${package.Controller};
 
 import com.conggua.common.base.common.Result;
 import com.conggua.common.base.common.ResultUtils;
+import com.conggua.common.base.exception.CommonErrorEnum;
 import com.conggua.common.web.model.request.PrimaryKeyDTO;
 import com.conggua.common.web.model.response.CommonPage;
 import ${package.Entity}.${entity};
@@ -44,22 +45,22 @@ public class ${table.controllerName} {
     @Operation(summary = "保存")
     @PostMapping("/save")
     public Result<?> save(@Validated @RequestBody ${entity}SaveDTO dto) {
-        ${table.entityPath}Service.save(dto);
-        return ResultUtils.success();
+        boolean success = ${table.entityPath}Service.save(dto);
+        return ResultUtils.ofSuccess(success, CommonErrorEnum.SAVE_ERROR);
     }
 
     @Operation(summary = "删除")
     @PostMapping("/delete")
     public Result<?> delete(@Validated @RequestBody PrimaryKeyDTO dto) {
-        ${table.entityPath}Service.removeById(dto.getId());
-        return ResultUtils.success();
+        boolean success = ${table.entityPath}Service.removeById(dto.id());
+        return ResultUtils.ofSuccess(success, CommonErrorEnum.DELETE_ERROR);
     }
 
     @Operation(summary = "更新")
     @PostMapping("/update")
     public Result<?> update(@Validated @RequestBody ${entity}UpdateDTO dto) {
-        ${table.entityPath}Service.update(dto);
-        return ResultUtils.success();
+        boolean success = ${table.entityPath}Service.update(dto);
+        return ResultUtils.ofSuccess(success, CommonErrorEnum.UPDATE_ERROR);
     }
 
     @Operation(summary = "分页查询")

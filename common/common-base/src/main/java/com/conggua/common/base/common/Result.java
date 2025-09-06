@@ -35,4 +35,8 @@ public class Result<T> implements Serializable {
     public Result(CommonErrorEnum commonErrorEnum) {
         this(commonErrorEnum.getCode(), null, commonErrorEnum.getMessage());
     }
+
+    public Result(CommonErrorEnum commonErrorEnum, T data) {
+        this(commonErrorEnum.getCode(), data, commonErrorEnum.getMessage());
+    }
 }

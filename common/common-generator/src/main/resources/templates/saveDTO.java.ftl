@@ -32,7 +32,7 @@ public class ${entity}SaveDTO implements Serializable {
 
 <#-- ---------- 字段循环遍历 ---------->
 <#list table.fields as field>
-<#-- 排除主键字段、创建时间、更新时间 -->
+    <#-- 排除主键字段、创建时间、更新时间 -->
     <#if !field.keyFlag && field.name != "create_time" && field.name != "update_time">
         <#if field.comment!?length gt 0>
     @Schema(description = "${field.comment}")

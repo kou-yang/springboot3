@@ -21,7 +21,10 @@ public enum CommonErrorEnum implements ErrorEnum {
     PARAMS_ERROR(40006, "请求参数错误"),
     NOT_FOUND_ERROR(40007, "请求数据不存在"),
     OPERATION_ERROR(40008, "操作失败"),
-    UN_KNOWN_SESSION_ERROR(40009, "token 过期或错误");
+    UN_KNOWN_SESSION_ERROR(40009, "token 过期或错误"),
+    SAVE_ERROR(40010, "保存失败"),
+    UPDATE_ERROR(40011, "更新失败"),
+    DELETE_ERROR(40012, "删除失败");
 
     /**
      * 状态码

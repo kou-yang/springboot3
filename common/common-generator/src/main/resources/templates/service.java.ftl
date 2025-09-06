@@ -35,13 +35,13 @@ public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
      * 保存
      * @param dto
      */
-    void save(${entity}SaveDTO dto);
+    boolean save(${entity}SaveDTO dto);
 
     /**
      * 修改
      * @param dto
      */
-    void update(${entity}UpdateDTO dto);
+    boolean update(${entity}UpdateDTO dto);
 
     /**
      * 分页查询

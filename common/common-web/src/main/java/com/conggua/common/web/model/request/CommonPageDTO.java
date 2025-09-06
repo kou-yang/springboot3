@@ -20,9 +20,9 @@ import java.util.List;
 @Data
 public class CommonPageDTO {
 
-    @Schema(description = "页索引")
+    @Schema(description = "页索引", defaultValue = "1")
     private Integer pageIndex = 1;
-    @Schema(description = "页大小")
+    @Schema(description = "页大小", defaultValue = "10")
     private Integer pageSize = 10;
     @Schema(description = "排序")
     private List<Sort> sort;

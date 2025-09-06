@@ -28,17 +28,17 @@ import java.util.Optional;
 public class ${table.serviceImplName} extends ServiceImpl<${table.mapperName}, ${entity}> implements ${table.serviceName} {
 
     @Override
-    public void save(${entity}SaveDTO dto) {
+    public boolean save(${entity}SaveDTO dto) {
         ${entity} entity = new ${entity}();
         BeanUtils.copyProperties(dto, entity);
-        this.save(entity);
+        return this.save(entity);
     }
 
     @Override
-    public void update(${entity}UpdateDTO dto) {
+    public boolean update(${entity}UpdateDTO dto) {
         ${entity} entity = new ${entity}();
         BeanUtils.copyProperties(dto, entity);
-        this.updateById(entity);
+        return this.updateById(entity);
     }
 
     @Override

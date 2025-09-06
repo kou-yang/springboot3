@@ -25,7 +25,7 @@ public class ResultUtils {
      * @return
      */
     public static <T> Result<T> success(T data) {
-        return new Result<>(200, data, "ok");
+        return new Result<>(CommonErrorEnum.SUCCESS, data);
     }
 
     /**
@@ -54,5 +54,9 @@ public class ResultUtils {
      */
     public static <T> Result<T> error(CommonErrorEnum commonErrorEnum, String message) {
         return new Result<>(commonErrorEnum.getCode(), null, message);
+    }
+
+    public static Result<?> ofSuccess(boolean success, CommonErrorEnum errorEnum) {
+        return success ? success() : error(errorEnum);
     }
 }
