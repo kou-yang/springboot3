@@ -21,7 +21,7 @@ import java.util.List;
 public class CommonPage<T> {
 
     @Schema(description = "数据列表")
-    private List<T> record;
+    private List<T> records;
     @Schema(description = "数据总条数")
     private Long total;
 

@@ -31,16 +31,20 @@ public class ${entity}SaveDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
 <#-- ---------- 字段循环遍历 ---------->
+<#-- 先过滤出需要的字段 -->
+<#assign validFields = []>
 <#list table.fields as field>
-    <#-- 排除主键字段、创建时间、更新时间 -->
     <#if !field.keyFlag && field.name != "create_time" && field.name != "update_time">
-        <#if field.comment!?length gt 0>
+        <#assign validFields = validFields + [field]>
+    </#if>
+</#list>
+<#list validFields as field>
+    <#if field.comment!?length gt 0>
     @Schema(description = "${field.comment}")
-        </#if>
+    </#if>
     private ${field.propertyType} ${field.propertyName};
-        <#if field_has_next>
+    <#if field_has_next>
 
-        </#if>
     </#if>
 </#list>
 }

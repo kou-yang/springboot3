@@ -65,7 +65,7 @@ public class ${table.controllerName} {
 
     @Operation(summary = "分页查询")
     @PostMapping("/page")
-    public Result<CommonPage<${entity}VO>> page(@RequestBody ${entity}PageDTO dto) {
+    public Result<CommonPage<${entity}VO>> page(@Validated @RequestBody ${entity}PageDTO dto) {
         CommonPage<${entity}VO> page = ${table.entityPath}Service.page(dto);
         return ResultUtils.success(page);
     }

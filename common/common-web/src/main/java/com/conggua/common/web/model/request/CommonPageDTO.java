@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.conggua.common.base.util.CollStreamUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -25,14 +27,17 @@ public class CommonPageDTO {
     @Schema(description = "页大小", defaultValue = "10")
     private Integer pageSize = 10;
     @Schema(description = "排序")
+    @Valid
     private List<Sort> sort;
 
     @Data
     public static class Sort {
 
         @Schema(description = "排序字段")
+        @NotBlank
         private String field;
-        @Schema(description = "排序方式")
+        @Schema(description = "排序方式", defaultValue = "desc", allowableValues = {"asc", "desc"})
+        @NotBlank
         private String order;
     }
 
@@ -54,11 +59,7 @@ public class CommonPageDTO {
             }
             boolean isAsc = "asc".equalsIgnoreCase(sort.getOrder());
             String column = sort.getField().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase();
-            if (isAsc) {
-                page.addOrder(OrderItem.asc(column));
-            } else {
-                page.addOrder(OrderItem.desc(column));
-            }
+            page.addOrder(isAsc ? OrderItem.asc(column) : OrderItem.desc(column));
         }
         return page;
     }
