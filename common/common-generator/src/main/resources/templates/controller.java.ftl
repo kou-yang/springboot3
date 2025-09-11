@@ -10,7 +10,8 @@ import ${package.Service}.${table.serviceName};
 import ${package.Parent}.model.dto.${entity}SaveDTO;
 import ${package.Parent}.model.dto.${entity}UpdateDTO;
 import ${package.Parent}.model.dto.${entity}PageDTO;
-import ${package.Parent}.model.vo.${entity}VO;
+import ${package.Parent}.model.vo.${entity}PageVO;
+import ${package.Parent}.model.vo.${entity}DetailVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -65,21 +66,21 @@ public class ${table.controllerName} {
 
     @Operation(summary = "分页查询")
     @PostMapping("/page")
-    public Result<CommonPage<${entity}VO>> page(@Validated @RequestBody ${entity}PageDTO dto) {
-        CommonPage<${entity}VO> page = ${table.entityPath}Service.page(dto);
+    public Result<CommonPage<${entity}PageVO>> page(@Validated @RequestBody ${entity}PageDTO dto) {
+        CommonPage<${entity}PageVO> page = ${table.entityPath}Service.page(dto);
         return ResultUtils.success(page);
     }
 
-    @Operation(summary = "根据id查询")
-    @GetMapping("/get")
-    public Result<${entity}VO> get(String id) {
-        ${entity} entity = ${table.entityPath}Service.getById(id);
-        return ResultUtils.success(${table.entityPath}Service.entity2VO(entity));
+    @Operation(summary = "根据id查询详情")
+    @GetMapping("/detail")
+    public Result<${entity}DetailVO> getDetail(String id) {
+        ${entity}DetailVO vo = ${table.entityPath}Service.getDetal(id);
+        return ResultUtils.success(vo);
     }
 
     @Operation(summary = "查询全部")
     @GetMapping("/all")
-    public Result<List<${entity}>> all() {
+    public Result<List<${entity}>> listAll() {
         List<${entity}> list = ${table.entityPath}Service.list();
         return ResultUtils.success(list);
     }

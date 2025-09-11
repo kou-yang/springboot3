@@ -5,7 +5,8 @@ import ${superServiceClassPackage};
 import ${package.Parent}.model.dto.${entity}SaveDTO;
 import ${package.Parent}.model.dto.${entity}UpdateDTO;
 import ${package.Parent}.model.dto.${entity}PageDTO;
-import ${package.Parent}.model.vo.${entity}VO;
+import ${package.Parent}.model.vo.${entity}PageVO;
+import ${package.Parent}.model.vo.${entity}DetailVO;
 import com.conggua.common.web.model.response.CommonPage;
 import org.apache.commons.collections4.CollectionUtils;
 
@@ -48,20 +49,13 @@ public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
      * @param dto
      * @return
      */
-    CommonPage<${entity}VO> page(${entity}PageDTO dto);
+    CommonPage<${entity}PageVO> page(${entity}PageDTO dto);
 
     /**
-     * 实体转VO
-     * @param entityList
+     * 根据id查询详情
+     * @param id
      * @return
      */
-    List<${entity}VO> entityList2VOList(List<${entity}> entityList);
-
-    /**
-     * 实体转VO
-     * @param entity
-     * @return
-     */
-    ${entity}VO entity2VO(${entity} entity);
+    ${entity}DetailVO getDetal(String id);
 }
 </#if>

@@ -8,6 +8,7 @@ import com.conggua.common.base.exception.CommonErrorEnum;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -47,6 +48,12 @@ public class GlobalExceptionHandler {
         ex.getBindingResult().getFieldErrors().forEach(x -> errorMsg.append(x.getField()).append(":").append(x.getDefaultMessage()).append(";"));
         String message = errorMsg.toString();
         return ResultUtils.error(CommonErrorEnum.REQUEST_PARAM_INVALID_ERROR, message.substring(0, message.length() - 1));
+    }
+
+    @ExceptionHandler(value = DuplicateKeyException.class)
+    public Result<?> duplicateKeyExceptionHandler(DuplicateKeyException ex) {
+        log.error("duplicateKeyExceptionHandler", ex);
+        return ResultUtils.error(CommonErrorEnum.DUPLICATE_ERROR);
     }
 
     @ExceptionHandler(BusinessException.class)

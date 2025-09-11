@@ -103,9 +103,14 @@ public class Generator {
                     .packageName("model.dto")
                 )
                 .customFile(b -> b
-                    .fileName("VO.java")
-                    .templatePath("/templates/VO.java.ftl")
+                    .fileName("PageVO.java")
+                    .templatePath("/templates/pageVO.java.ftl")
                     .packageName("model.vo")
+                )
+                .customFile(b -> b
+                        .fileName("DetailVO.java")
+                        .templatePath("/templates/detailVO.java.ftl")
+                        .packageName("model.vo")
                 );
             })
             .templateEngine(new FreemarkerTemplateEngine())

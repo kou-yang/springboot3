@@ -6,7 +6,8 @@ import ${package.Service}.${table.serviceName};
 import ${package.Parent}.model.dto.${entity}SaveDTO;
 import ${package.Parent}.model.dto.${entity}UpdateDTO;
 import ${package.Parent}.model.dto.${entity}PageDTO;
-import ${package.Parent}.model.vo.${entity}VO;
+import ${package.Parent}.model.vo.${entity}PageVO;
+import ${package.Parent}.model.vo.${entity}DetailVO;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.conggua.common.base.util.CollStreamUtils;
@@ -15,9 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author ${author}
@@ -42,29 +41,33 @@ public class ${table.serviceImplName} extends ServiceImpl<${table.mapperName}, $
     }
 
     @Override
-    public CommonPage<${entity}VO> page(${entity}PageDTO dto) {
+    public CommonPage<${entity}PageVO> page(${entity}PageDTO dto) {
         Page<${entity}> page = Page.of(dto.getPageIndex(), dto.getPageSize());
         // 添加排序
         page = dto.addOrder(page, dto.getSort(), ${entity}.class);
         page = lambdaQuery().page(page);
         // entity转vo
-        List<${entity}VO> voList = this.entityList2VOList(page.getRecords());
+        List<${entity}PageVO> voList = this.entityList2PageVOList(page.getRecords());
         return CommonPage.restPage(voList, page.getTotal());
     }
 
     @Override
-    public List<${entity}VO> entityList2VOList(List<${entity}> entityList) {
+    public ${entity}DetailVO getDetal(String id) {
+        ${entity} entity = this.getById(id);
+        return this.entity2DetailVO(entity);
+    }
+
+    private List<${entity}PageVO> entityList2PageVOList(List<${entity}> entityList) {
         return CollStreamUtils.toList(entityList, entity -> {
-            ${entity}VO vo = new ${entity}VO();
+            ${entity}PageVO vo = new ${entity}PageVO();
             BeanUtils.copyProperties(entity, vo);
             return vo;
         });
     }
 
-    @Override
-    public ${entity}VO entity2VO(${entity} entity) {
-        return Optional.ofNullable(this.entityList2VOList(Collections.singletonList(entity)))
-        .map(voList -> voList.get(0))
-        .orElse(null);
+    private ${entity}DetailVO entity2DetailVO(${entity} entity) {
+        ${entity}DetailVO vo = new ${entity}DetailVO();
+        BeanUtils.copyProperties(entity, vo);
+        return vo;
     }
 }

@@ -24,7 +24,8 @@ public enum CommonErrorEnum implements ErrorEnum {
     UN_KNOWN_SESSION_ERROR(40009, "token 过期或错误"),
     SAVE_ERROR(40010, "保存失败"),
     UPDATE_ERROR(40011, "更新失败"),
-    DELETE_ERROR(40012, "删除失败");
+    DELETE_ERROR(40012, "删除失败"),
+    DUPLICATE_ERROR(40013, "数据重复");
 
     /**
      * 状态码

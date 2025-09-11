@@ -15,7 +15,7 @@ import java.io.Serial;
  * @since ${date}
  */
 @Data
-public class ${entity}VO implements Serializable {
+public class ${entity}DetailVO implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
