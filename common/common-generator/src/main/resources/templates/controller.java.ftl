@@ -72,8 +72,8 @@ public class ${table.controllerName} {
     }
 
     @Operation(summary = "根据id查询详情")
-    @GetMapping("/detail")
-    public Result<${entity}DetailVO> getDetail(String id) {
+    @GetMapping("/detail/{id}")
+    public Result<${entity}DetailVO> getDetail(@PathVariable String id) {
         ${entity}DetailVO vo = ${table.entityPath}Service.getDetal(id);
         return ResultUtils.success(vo);
     }

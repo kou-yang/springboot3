@@ -137,6 +137,19 @@ public class RedisUtils {
     }
 
     /**
+     * 仅当key不存在时，设置key的值
+     *
+     * @param key
+     * @param value
+     * @param timeout
+     * @param unit
+     * @return
+     */
+    public static boolean setIfAbsent(String key, Object value, long timeout, TimeUnit unit) {
+        return redisTemplate.opsForValue().setIfAbsent(key, value, timeout, unit);
+    }
+
+    /**
      * 获取指定key的值
      *
      * @param key

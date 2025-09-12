@@ -12,6 +12,7 @@ public enum CommonErrorEnum implements ErrorEnum {
     REQUEST_PARAM_INVALID_ERROR(700, "请求参数错误"),
     VISIT_FREQUENTLY_ERROR(701, "访问频繁，请稍后再试"),
     LOCK_LIMIT_ERROR(702, "访问频繁，请稍后再试"),
+    REPEAT_SUBMIT_ERROR(703, "重复提交"),
 
     NOT_LOGIN_ERROR(40001, "未登录"),
     ACCOUNT_ERROR(40002, "账号错误"),
