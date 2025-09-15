@@ -2,6 +2,7 @@ package ${pageDTOPackage};
 
 import com.conggua.common.web.model.request.CommonPageDTO;
 import lombok.Data;
+import lombok.ToString;
 import lombok.EqualsAndHashCode;
 
 /**
@@ -9,6 +10,7 @@ import lombok.EqualsAndHashCode;
  * @since ${date}
  */
 @Data
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class ${entity}PageDTO extends CommonPageDTO {
 }
