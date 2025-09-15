@@ -24,14 +24,14 @@ public @interface Idempotent {
     String prefix() default "idempotent:";
 
     /**
-     * 过期时间，默认1分钟
+     * 过期时间，默认5分钟
      */
-    long expire() default 60;
+    long expire() default 5;
 
     /**
      * 时间单位
      */
-    TimeUnit timeUnit() default TimeUnit.SECONDS;
+    TimeUnit timeUnit() default TimeUnit.MINUTES;
 
     /**
      * 提示消息

@@ -25,6 +25,7 @@
         <fastexcel.version>1.2.0</fastexcel.version>
         <knife4j.openapi3.version>4.5.0</knife4j.openapi3.version>
         <mybatis-plus-bom.version>3.5.12</mybatis-plus-bom.version>
+        <druid.version>1.2.27</druid.version>
         <pagehelper.version>2.1.1</pagehelper.version>
         <redisson.version>3.50.0</redisson.version>
         <oss.version>3.17.4</oss.version>
@@ -78,6 +79,11 @@
                 <version>${mybatis-plus-bom.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${druid.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.github.pagehelper</groupId>

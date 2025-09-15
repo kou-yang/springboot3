@@ -48,6 +48,8 @@ public class IdempotentAspect {
             // 业务失败时是否删除Key（允许重试）
             RedisUtils.delete(redisKey);
             throw e;
+        } finally {
+            RedisUtils.delete(redisKey);
         }
     }
 }
