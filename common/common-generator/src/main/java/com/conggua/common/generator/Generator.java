@@ -3,15 +3,14 @@ package com.conggua.common.generator;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.generator.FastAutoGenerator;
 import com.baomidou.mybatisplus.generator.config.OutputFile;
+import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.DbColumnType;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 import com.baomidou.mybatisplus.generator.fill.Column;
 
+import java.io.File;
 import java.sql.Types;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author: kouyang
@@ -23,11 +22,12 @@ public class Generator {
     private static final String SRC_JAVA = "src/main/java";
     private static final String SRC_RESOURCES = "src/main/resources";
 
-    public static void create(String url, String username, String password, List<String> tables, String module, String parentPackage) {
+    public static void create(Boolean overwrite, String url, String username, String password, List<String> tables, String module, String parentPackage) {
         FastAutoGenerator.create(url, username, password)
             .globalConfig(builder -> {
                 builder.author("kouyang")
                     .enableSpringdoc()
+                    .disableOpenDir()
                     // 指定输出目录(/xxx/xxx/src/main/java)
                     .outputDir(String.join("/", System.getProperty("user.dir"), module, SRC_JAVA));
             })
@@ -57,6 +57,7 @@ public class Generator {
                     .entityBuilder()
                         .enableLombok()
                         .enableTableFieldAnnotation()
+                        .logicDeleteColumnName("deleted")
                         .addTableFills(
                             new Column("create_time", FieldFill.INSERT),
                             new Column("update_time", FieldFill.INSERT_UPDATE),
@@ -87,6 +88,25 @@ public class Generator {
                 customMap.put("voPackage", parentPackage + ".model.vo");
                 builder.customMap(customMap);
 
+                // 覆盖模式
+                if (overwrite) {
+                    builder.beforeOutputFile((tableInfo, objectMap) -> {
+                        // 获取所有即将生成的文件路径（根据策略配置）
+                        List<String> filePaths = getAllGeneratedFilePaths(tableInfo, module, parentPackage);
+                        for (String filePath : filePaths) {
+                            File file = new File(filePath);
+                            if (file.exists()) {
+                                boolean deleted = file.delete();
+                                if (deleted) {
+                                    System.out.println("🗑️ 已删除旧文件（覆盖模式）: " + filePath);
+                                } else {
+                                    System.err.println("❌ 删除失败: " + filePath);
+                                }
+                            }
+                        }
+                    });
+                }
+
                 builder.customFile(b -> b
                     .fileName("SaveDTO.java")
                     .templatePath("/templates/saveDTO.java.ftl")
@@ -115,5 +135,47 @@ public class Generator {
             })
             .templateEngine(new FreemarkerTemplateEngine())
             .execute();
+    }
+
+    private static List<String> getAllGeneratedFilePaths(TableInfo tableInfo, String module, String parentPackage) {
+        List<String> paths = new ArrayList<>();
+
+        String javaDir = String.join("/", System.getProperty("user.dir"), module, SRC_JAVA);
+        String resourceDir = String.join("/", System.getProperty("user.dir"), module, SRC_RESOURCES);
+
+        String entityPackagePath = parentPackage.replace(".", "/");
+        String mapperPackagePath = (parentPackage + ".mapper").replace(".", "/");
+        String servicePackagePath = (parentPackage + ".service").replace(".", "/");
+        String serviceImplPackagePath = (parentPackage + ".service.impl").replace(".", "/");
+        String controllerPackagePath = (parentPackage + ".controller").replace(".", "/");
+
+        String className = tableInfo.getEntityName();
+
+        // 1. Entity
+        paths.add(javaDir + "/" + entityPackagePath + "/model/entity/" + className + ".java");
+
+        // 2. Mapper
+        paths.add(javaDir + "/" + mapperPackagePath + "/" + className + "Mapper.java");
+
+        // 3. Mapper XML
+        paths.add(resourceDir + "/mapper/" + className + "Mapper.xml");
+
+        // 4. Service
+        paths.add(javaDir + "/" + servicePackagePath + "/" + className + "Service.java");
+
+        // 5. ServiceImpl
+        paths.add(javaDir + "/" + serviceImplPackagePath + "/" + className + "ServiceImpl.java");
+
+        // 6. Controller
+        paths.add(javaDir + "/" + controllerPackagePath + "/" + className + "Controller.java");
+
+        // 7. 自定义 DTO/VO
+        paths.add(javaDir + "/" + entityPackagePath + "/model/dto/" + className + "SaveDTO.java");
+        paths.add(javaDir + "/" + entityPackagePath + "/model/dto/" + className + "UpdateDTO.java");
+        paths.add(javaDir + "/" + entityPackagePath + "/model/dto/" + className + "PageDTO.java");
+        paths.add(javaDir + "/" + entityPackagePath + "/model/vo/" + className + "PageVO.java");
+        paths.add(javaDir + "/" + entityPackagePath + "/model/vo/" + className + "DetailVO.java");
+
+        return paths;
     }
 }

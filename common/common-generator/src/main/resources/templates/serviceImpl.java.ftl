@@ -66,6 +66,9 @@ public class ${table.serviceImplName} extends ServiceImpl<${table.mapperName}, $
     }
 
     private ${entity}DetailVO entity2DetailVO(${entity} entity) {
+        if (entity == null) {
+            return null;
+        }
         ${entity}DetailVO vo = new ${entity}DetailVO();
         BeanUtils.copyProperties(entity, vo);
         return vo;

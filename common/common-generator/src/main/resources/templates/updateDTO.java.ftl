@@ -35,7 +35,7 @@ public class ${entity}UpdateDTO implements Serializable {
 <#-- 先过滤出需要的字段 -->
 <#assign validFields = []>
 <#list table.fields as field>
-    <#if field.name != "create_time" && field.name != "update_time">
+    <#if field.name != "create_time" && field.name != "update_time" && field.name != "deleted">
         <#assign validFields = validFields + [field]>
     </#if>
 </#list>
