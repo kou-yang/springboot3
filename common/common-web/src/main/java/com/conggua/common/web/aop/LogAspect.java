@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,15 +47,18 @@ public class LogAspect {
         String url = request.getRequestURI();
         // 获取请求参数
         String reqParam = buildRequestParam(request, point.getArgs());
-        // 输出请求日志
-        log.info("request start, id: {}, path: {}, ip: {}, params: {}", requestId, url, NetworkUtils.getIpAddress(request), reqParam);
-        // 执行原方法
-        Object result = point.proceed();
-        // 输出响应日志
-        stopWatch.stop();
-        long totalTimeMillis = stopWatch.getTotalTimeMillis();
-        log.info("request end, id: {}, cost: {}ms", requestId, totalTimeMillis);
-        return result;
+        try (var ignored = MDC.putCloseable("traceId", requestId)) {
+            MDC.put("traceId", requestId);
+            // 输出请求日志
+            log.info("request start, path: {}, ip: {}, params: {}", url, NetworkUtils.getIpAddress(request), reqParam);
+            // 执行原方法
+            Object result = point.proceed();
+            // 输出响应日志
+            stopWatch.stop();
+            long totalTimeMillis = stopWatch.getTotalTimeMillis();
+            log.info("request end, cost: {}ms", totalTimeMillis);
+            return result;
+        }
     }
 
     /**
