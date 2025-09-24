@@ -10,6 +10,7 @@ import ${package.Parent}.model.vo.${entity}PageVO;
 import ${package.Parent}.model.vo.${entity}DetailVO;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.conggua.common.base.util.CollStreamUtils;
 import com.conggua.common.web.model.response.CommonPage;
 import lombok.RequiredArgsConstructor;

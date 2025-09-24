@@ -1,19 +1,13 @@
 package ${package.Service};
 
 import ${package.Entity}.${entity};
-import ${superServiceClassPackage};
+import com.conggua.common.web.service.BaseService;
 import ${package.Parent}.model.dto.${entity}SaveDTO;
 import ${package.Parent}.model.dto.${entity}UpdateDTO;
 import ${package.Parent}.model.dto.${entity}PageDTO;
 import ${package.Parent}.model.vo.${entity}PageVO;
 import ${package.Parent}.model.vo.${entity}DetailVO;
 import com.conggua.common.web.model.response.CommonPage;
-import org.apache.commons.collections4.CollectionUtils;
-
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * @author ${author}
@@ -22,15 +16,7 @@ import java.util.List;
 <#if kotlin>
 interface ${table.serviceName} : ${superServiceClass}<${entity}>
 <#else>
-public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
-
-    @Override
-    default List<${entity}> listByIds(Collection<? extends Serializable> idList) {
-        if (CollectionUtils.isEmpty(idList)) {
-            return Collections.emptyList();
-        }
-        return ${superServiceClass}.super.listByIds(idList);
-    }
+public interface ${table.serviceName} extends BaseService<${entity}> {
 
     /**
      * 保存
