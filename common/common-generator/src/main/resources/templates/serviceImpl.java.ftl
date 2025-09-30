@@ -12,6 +12,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.conggua.common.base.util.CollStreamUtils;
+import com.conggua.common.base.util.CRUDUtil;
 import com.conggua.common.web.model.response.CommonPage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -28,24 +29,26 @@ import java.util.List;
 public class ${table.serviceImplName} extends ServiceImpl<${table.mapperName}, ${entity}> implements ${table.serviceName} {
 
     @Override
-    public boolean save(${entity}SaveDTO dto) {
+    public ${entity} save(${entity}SaveDTO dto) {
         ${entity} entity = new ${entity}();
         BeanUtils.copyProperties(dto, entity);
-        return this.save(entity);
+        boolean one = this.save(entity);
+        CRUDUtil.validateSaveSuccess(one);
+        return entity;
     }
 
     @Override
-    public boolean update(${entity}UpdateDTO dto) {
+    public ${entity} update(${entity}UpdateDTO dto) {
         ${entity} entity = new ${entity}();
         BeanUtils.copyProperties(dto, entity);
-        return this.updateById(entity);
+        boolean one = this.updateById(entity);
+        CRUDUtil.validateSaveSuccess(one);
+        return entity;
     }
 
     @Override
     public CommonPage<${entity}PageVO> page(${entity}PageDTO dto) {
-        Page<${entity}> page = Page.of(dto.getPageIndex(), dto.getPageSize());
-        // 添加排序
-        page = dto.addOrder(page, dto.getSort(), ${entity}.class);
+        Page<${entity}> page = dto.startMpPage(${entity}.class);
         page = lambdaQuery().page(page);
         // entity转vo
         List<${entity}PageVO> voList = this.entityList2PageVOList(page.getRecords());

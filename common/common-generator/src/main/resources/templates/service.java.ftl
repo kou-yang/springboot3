@@ -22,13 +22,13 @@ public interface ${table.serviceName} extends BaseService<${entity}> {
      * 保存
      * @param dto
      */
-    boolean save(${entity}SaveDTO dto);
+    ${entity} save(${entity}SaveDTO dto);
 
     /**
      * 修改
      * @param dto
      */
-    boolean update(${entity}UpdateDTO dto);
+    ${entity} update(${entity}UpdateDTO dto);
 
     /**
      * 分页查询

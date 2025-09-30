@@ -46,8 +46,8 @@ public class ${table.controllerName} {
     @Operation(summary = "保存")
     @PostMapping("/save")
     public Result<?> save(@Validated @RequestBody ${entity}SaveDTO dto) {
-        boolean success = ${table.entityPath}Service.save(dto);
-        return ResultUtils.ofSuccess(success, CommonErrorEnum.SAVE_ERROR);
+        ${entity} entity = ${table.entityPath}Service.save(dto);
+        return ResultUtils.success(entity);
     }
 
     @Operation(summary = "删除")
@@ -60,8 +60,8 @@ public class ${table.controllerName} {
     @Operation(summary = "更新")
     @PostMapping("/update")
     public Result<?> update(@Validated @RequestBody ${entity}UpdateDTO dto) {
-        boolean success = ${table.entityPath}Service.update(dto);
-        return ResultUtils.ofSuccess(success, CommonErrorEnum.UPDATE_ERROR);
+        ${entity} entity = ${table.entityPath}Service.update(dto);
+        return ResultUtils.success(entity);
     }
 
     @Operation(summary = "分页查询")

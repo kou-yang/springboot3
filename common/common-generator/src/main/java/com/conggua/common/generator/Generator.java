@@ -61,8 +61,8 @@ public class Generator {
                         .addTableFills(
                             new Column("create_time", FieldFill.INSERT),
                             new Column("update_time", FieldFill.INSERT_UPDATE),
-                            new Column("createBy", FieldFill.INSERT),
-                            new Column("updateBy", FieldFill.INSERT_UPDATE)
+                            new Column("create_by", FieldFill.INSERT),
+                            new Column("update_by", FieldFill.INSERT_UPDATE)
                         )
                         .javaTemplate("/templates/entity.java")
                     .mapperBuilder()

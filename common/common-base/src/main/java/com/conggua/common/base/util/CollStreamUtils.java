@@ -134,6 +134,22 @@ public class CollStreamUtils {
     }
 
     /**
+     * 先过滤再Map转新Map
+     *
+     * @param collection 源集合
+     * @param predicate  filter表达式
+     * @param keyMapper  keyMapper表达式
+     * @param valueMapper valueMapper表达式
+     * @param <T>        泛型
+     * @param <K>        泛型
+     * @param <U>        泛型
+     * @return 新的Map
+     */
+    public static <T, K, U> Map<K, U> filterThenToMap(Collection<T> collection, Predicate<? super T> predicate, Function<? super T, ? extends K> keyMapper, Function<? super T, ? extends U> valueMapper) {
+        return nullDefaultEmpty(collection).stream().filter(predicate).collect(Collectors.toMap(keyMapper, valueMapper));
+    }
+
+    /**
      * 先过滤再Map转新Set
      *
      * @param collection 源集合
