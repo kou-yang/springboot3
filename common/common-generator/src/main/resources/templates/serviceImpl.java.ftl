@@ -10,11 +10,11 @@ import ${package.Parent}.model.vo.${entity}PageVO;
 import ${package.Parent}.model.vo.${entity}DetailVO;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.conggua.common.base.util.CollStreamUtils;
 import com.conggua.common.base.util.CRUDUtil;
 import com.conggua.common.web.model.response.CommonPage;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +24,7 @@ import java.util.List;
  * @author ${author}
  * @since ${date}
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ${table.serviceImplName} extends ServiceImpl<${table.mapperName}, ${entity}> implements ${table.serviceName} {
@@ -42,7 +43,7 @@ public class ${table.serviceImplName} extends ServiceImpl<${table.mapperName}, $
         ${entity} entity = new ${entity}();
         BeanUtils.copyProperties(dto, entity);
         boolean one = this.updateById(entity);
-        CRUDUtil.validateSaveSuccess(one);
+        CRUDUtil.validateUpdateSuccess(one);
         return entity;
     }
 

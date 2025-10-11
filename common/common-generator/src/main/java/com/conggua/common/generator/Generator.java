@@ -11,6 +11,8 @@ import com.baomidou.mybatisplus.generator.fill.Column;
 import java.io.File;
 import java.sql.Types;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author: kouyang
@@ -23,6 +25,13 @@ public class Generator {
     private static final String SRC_RESOURCES = "src/main/resources";
 
     public static void create(Boolean overwrite, String url, String username, String password, List<String> tables, String module, String parentPackage) {
+        if (Boolean.TRUE.equals(overwrite)) {
+            if (!confirmOverwrite()) {
+                // 用户取消，直接退出
+                return;
+            }
+        }
+
         FastAutoGenerator.create(url, username, password)
             .globalConfig(builder -> {
                 builder.author("kouyang")
@@ -177,5 +186,49 @@ public class Generator {
         paths.add(javaDir + "/" + entityPackagePath + "/model/vo/" + className + "DetailVO.java");
 
         return paths;
+    }
+
+    private static boolean confirmOverwrite() {
+        AtomicReference<String> userInput = new AtomicReference<>("");
+        AtomicBoolean hasInput = new AtomicBoolean(false);
+
+        System.out.println("⚠️ 覆盖模式已启用！请在 10 秒内输入确认：");
+        System.out.print("输入 Y 确认覆盖，N 取消生成（超时 10s 自动取消）：");
+
+        Thread inputThread = new Thread(() -> {
+            try (Scanner scanner = new Scanner(System.in)) {
+                if (scanner.hasNextLine()) {
+                    String line = scanner.nextLine().trim();
+                    userInput.set(line);
+                    hasInput.set(true);
+                }
+            }
+        });
+        inputThread.setDaemon(true);
+        inputThread.start();
+
+        try {
+            inputThread.join(10_000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            return false;
+        }
+
+        if (!hasInput.get()) {
+            System.out.println("\n⏳ 超时未输入，已取消生成。");
+            return false;
+        }
+
+        String input = userInput.get();
+        if ("Y".equalsIgnoreCase(input)) {
+            System.out.println("✅ 已确认，开始覆盖生成...");
+            return true;
+        } else if ("N".equalsIgnoreCase(input)) {
+            System.out.println("❌ 用户已取消生成。");
+            return false;
+        } else {
+            System.out.println("❓ 无效输入（\"" + input + "\"），已取消生成。");
+            return false;
+        }
     }
 }
