@@ -10,10 +10,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 </#if>
 <#if entityLombokModel>
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
     <#if chainModel>
 import lombok.experimental.Accessors;
     </#if>
@@ -25,8 +22,8 @@ import java.io.Serial;
  * @since ${date}
  */
 <#if entityLombokModel>
-@Data
 @Builder
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
     <#if chainModel>
