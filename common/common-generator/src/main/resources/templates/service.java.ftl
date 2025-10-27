@@ -25,6 +25,12 @@ public interface ${table.serviceName} extends BaseService<${entity}> {
     ${entity} save(${entity}SaveDTO dto);
 
     /**
+     * 删除
+     * @param id
+     */
+    void remove(String id);
+
+    /**
      * 修改
      * @param dto
      */
@@ -42,6 +48,6 @@ public interface ${table.serviceName} extends BaseService<${entity}> {
      * @param id
      * @return
      */
-    ${entity}DetailVO getDetal(String id);
+    ${entity}DetailVO getDetail(String id);
 }
 </#if>

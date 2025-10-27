@@ -243,6 +243,37 @@ public class RedisUtils {
 
 
     /* =========================== Hash start =========================== */
+    /**
+     * 添加hash
+     * @param key
+     * @param hashKey
+     * @param value
+     */
+    public static void putHash(String key, String hashKey, Object value) {
+        redisTemplate.opsForHash().put(key, hashKey, value);
+    }
+
+    /**
+     * 获取hash
+     * @param key
+     * @param hashKey
+     * @param clazz
+     * @param <T>
+     * @return
+     */
+    public static <T> T getHash(String key, String hashKey, Class<T> clazz) {
+        return (T) redisTemplate.opsForHash().get(key, hashKey);
+    }
+
+    /**
+     * 获取hash
+     * @param key
+     * @param hashKey
+     * @return
+     */
+    public static Object getHash(String key, String hashKey) {
+        return redisTemplate.opsForHash().get(key, hashKey);
+    }
     /* =========================== Hash end =========================== */
 
 

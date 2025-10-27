@@ -2,7 +2,6 @@ package ${package.Controller};
 
 import com.conggua.common.base.common.Result;
 import com.conggua.common.base.common.ResultUtils;
-import com.conggua.common.base.exception.CommonErrorEnum;
 import com.conggua.common.web.model.request.PrimaryKeyDTO;
 import com.conggua.common.web.model.response.CommonPage;
 import ${package.Entity}.${entity};
@@ -53,8 +52,8 @@ public class ${table.controllerName} {
     @Operation(summary = "删除")
     @PostMapping("/delete")
     public Result<?> delete(@Validated @RequestBody PrimaryKeyDTO dto) {
-        boolean success = ${table.entityPath}Service.removeById(dto.id());
-        return ResultUtils.ofSuccess(success, CommonErrorEnum.DELETE_ERROR);
+        ${table.entityPath}Service.remove(dto.id());
+        return ResultUtils.success();
     }
 
     @Operation(summary = "更新")
@@ -74,7 +73,7 @@ public class ${table.controllerName} {
     @Operation(summary = "根据id查询详情")
     @GetMapping("/detail/{id}")
     public Result<${entity}DetailVO> getDetail(@PathVariable String id) {
-        ${entity}DetailVO vo = ${table.entityPath}Service.getDetal(id);
+        ${entity}DetailVO vo = ${table.entityPath}Service.getDetail(id);
         return ResultUtils.success(vo);
     }
 

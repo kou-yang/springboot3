@@ -39,6 +39,12 @@ public class ${table.serviceImplName} extends ServiceImpl<${table.mapperName}, $
     }
 
     @Override
+    public void remove(String id) {
+        boolean one = this.removeById(id);
+        CRUDUtil.validateDeleteSuccess(one);
+    }
+
+    @Override
     public ${entity} update(${entity}UpdateDTO dto) {
         ${entity} entity = new ${entity}();
         BeanUtils.copyProperties(dto, entity);
@@ -57,7 +63,7 @@ public class ${table.serviceImplName} extends ServiceImpl<${table.mapperName}, $
     }
 
     @Override
-    public ${entity}DetailVO getDetal(String id) {
+    public ${entity}DetailVO getDetail(String id) {
         ${entity} entity = this.getById(id);
         return this.entity2DetailVO(entity);
     }
