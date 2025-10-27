@@ -7,9 +7,7 @@ import lombok.*;
  * @author ${author}
  * @since ${date}
  */
-@Builder
 @Data
-@AllArgsConstructor
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class ${entity}PageDTO extends CommonPageDTO {
