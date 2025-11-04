@@ -2,7 +2,6 @@ package com.conggua.common.web.aop;
 
 import com.conggua.common.base.exception.BusinessException;
 import com.conggua.common.base.exception.CommonErrorEnum;
-import com.conggua.common.base.util.SpringContextUtils;
 import com.conggua.common.web.annotation.PreAuth;
 import com.conggua.common.web.auth.BaseAuthFun;
 import lombok.SneakyThrows;
@@ -14,12 +13,9 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.context.expression.BeanFactoryResolver;
 import org.springframework.core.DefaultParameterNameDiscoverer;
-import org.springframework.core.type.filter.AssignableTypeFilter;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
@@ -27,8 +23,8 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
+import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 /**
  * @author ky
@@ -45,13 +41,6 @@ public class PreAuthAspect {
     private static final ExpressionParser EXPRESSION_PARSER = new SpelExpressionParser();
 
     private static final DefaultParameterNameDiscoverer PARAMETER_NAME_DISCOVERER = new DefaultParameterNameDiscoverer();
-
-    private static final ClassPathScanningCandidateComponentProvider PROVIDER;
-
-    static {
-        PROVIDER = new ClassPathScanningCandidateComponentProvider(false);
-        PROVIDER.addIncludeFilter(new AssignableTypeFilter(BaseAuthFun.class));
-    }
 
     @Pointcut("@annotation(com.conggua.common.web.annotation.PreAuth) || @within(com.conggua.common.web.annotation.PreAuth)")
     private void pointcut() {
@@ -101,14 +90,9 @@ public class PreAuthAspect {
 
     @SneakyThrows
     private BaseAuthFun getEvaluationContext() {
-        Set<BeanDefinition> beanDefinitionSet = PROVIDER.findCandidateComponents("com.");
-        if (CollectionUtils.isNotEmpty(beanDefinitionSet)) {
-            for (BeanDefinition beanDefinition : beanDefinitionSet) {
-                Class<?> clazz = Class.forName(beanDefinition.getBeanClassName());
-                if (clazz.getSuperclass().equals(BaseAuthFun.class)) {
-                    return (BaseAuthFun) SpringContextUtils.getBean(clazz);
-                }
-            }
+        Map<String, BaseAuthFun> authFunBeans = applicationContext.getBeansOfType(BaseAuthFun.class);
+        if (CollectionUtils.isNotEmpty(authFunBeans.values())) {
+            return authFunBeans.values().iterator().next();
         }
         return new BaseAuthFun();
     }

@@ -68,7 +68,7 @@ public class ${table.serviceImplName} extends ServiceImpl<${table.mapperName}, $
         return this.entity2DetailVO(entity);
     }
 
-    private List<${entity}PageVO> entityList2PageVOList(List<${entity}> entityList) {
+    public List<${entity}PageVO> entityList2PageVOList(List<${entity}> entityList) {
         return CollStreamUtils.toList(entityList, entity -> {
             ${entity}PageVO vo = new ${entity}PageVO();
             BeanUtils.copyProperties(entity, vo);
@@ -76,7 +76,7 @@ public class ${table.serviceImplName} extends ServiceImpl<${table.mapperName}, $
         });
     }
 
-    private ${entity}DetailVO entity2DetailVO(${entity} entity) {
+    public ${entity}DetailVO entity2DetailVO(${entity} entity) {
         if (entity == null) {
             return null;
         }

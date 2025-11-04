@@ -105,6 +105,40 @@ public class TreeUtils {
     }
 
     /**
+     * 给定目标节点 ID，从扁平列表中找到从目标节点到根节点的路径（以列表形式返回）
+     *
+     * @param list           扁平节点列表
+     * @param targetId       目标节点 ID
+     * @param idGetter       获取节点 ID 的函数
+     * @param parentIdGetter 获取父节点 ID 的函数
+     * @param <T>            节点类型
+     * @param <K>            ID 类型
+     * @return 从目标节点到根节点的路径列表，若未找到则返回空列表
+     */
+    public static <T, K> List<T> getPathToList(List<T> list, K targetId, Function<T, K> idGetter, Function<T, K> parentIdGetter) {
+        if (CollectionUtils.isEmpty(list) || Objects.isNull(targetId)) {
+            return Collections.emptyList();
+        }
+        // 构建 id -> node 的映射
+        Map<K, T> nodeMap = CollStreamUtils.toMap(list, idGetter, Function.identity());
+        // 从目标节点开始向上回溯，收集路径（逆序：target -> ... -> root）
+        List<T> pathReversed = new ArrayList<>();
+        K currentId = targetId;
+        while (currentId != null) {
+            T node = nodeMap.get(currentId);
+            if (node == null) {
+                // 路径中断，目标节点或其祖先不在列表中
+                return Collections.emptyList();
+            }
+            pathReversed.add(node);
+            currentId = parentIdGetter.apply(node);
+        }
+        // 反转得到 root -> ... -> target
+        Collections.reverse(pathReversed);
+        return pathReversed;
+    }
+
+    /**
      * 设置子节点的函数式接口
      */
     @FunctionalInterface
