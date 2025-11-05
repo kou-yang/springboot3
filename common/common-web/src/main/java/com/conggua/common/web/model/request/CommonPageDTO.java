@@ -81,7 +81,7 @@ public class CommonPageDTO {
         }
     }
 
-    private  <T> String buildOrderSql(Class<T> clazz) {
+    private <T> String buildOrderSql(Class<T> clazz) {
         if (CollectionUtils.isEmpty(this.sort)) {
             return "";
         }

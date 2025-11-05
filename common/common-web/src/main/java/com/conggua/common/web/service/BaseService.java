@@ -40,6 +40,18 @@ public interface BaseService<T> extends IService<T> {
     }
 
     /**
+     * 根据字段 EQ 查询单个数据
+     * @param columnOne
+     * @param valueOne
+     * @param columnTwo
+     * @param valueTwo
+     * @return
+     */
+    default T getBy(SFunction<T, ?> columnOne, Object valueOne, SFunction<T, ?> columnTwo, Object valueTwo) {
+        return lambdaQuery().eq(columnOne, valueOne).eq(columnTwo, valueTwo).one();
+    }
+
+    /**
      * 根据字段 EQ 查询集合数据
      * @param column
      * @param value

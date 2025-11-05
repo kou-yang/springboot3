@@ -128,7 +128,8 @@ public class TreeUtils {
             T node = nodeMap.get(currentId);
             if (node == null) {
                 // 路径中断，目标节点或其祖先不在列表中
-                return Collections.emptyList();
+                Collections.reverse(pathReversed);
+                return pathReversed;
             }
             pathReversed.add(node);
             currentId = parentIdGetter.apply(node);
