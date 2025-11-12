@@ -1,10 +1,6 @@
 package com.conggua.common.base.common;
 
-import com.conggua.common.base.exception.BusinessException;
-import com.conggua.common.base.exception.CommonErrorEnum;
 import com.conggua.common.base.model.entity.User;
-import com.conggua.common.base.util.SpringContextUtils;
-import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.Optional;
 
@@ -29,16 +25,11 @@ public class UserHolder {
         threadLocal.remove();
     }
 
-    public static String getTenantId() {
-        HttpServletRequest request = SpringContextUtils.getHttpServletRequest();
-        return Optional.ofNullable(request.getAttribute("tenantId")).map(Object::toString).orElseThrow(() -> new BusinessException(CommonErrorEnum.OPERATION_ERROR, "tenantId为null"));
-    }
-
     public static String getUserId() {
         return Optional.ofNullable(get()).map(User::getId).orElse(null);
     }
 
     public static String getUserName() {
-        return Optional.ofNullable(get()).map(User::getAccName).orElse(null);
+        return Optional.ofNullable(get()).map(User::getUserName).orElse(null);
     }
 }

@@ -24,7 +24,7 @@ public class Generator {
     private static final String SRC_JAVA = "src/main/java";
     private static final String SRC_RESOURCES = "src/main/resources";
 
-    public static void create(Boolean overwrite, String url, String username, String password, List<String> tables, String module, String parentPackage) {
+    public static void create(Boolean overwrite, String url, String username, String password, List<String> tables, List<String> prefix, String module, String parentPackage) {
         if (Boolean.TRUE.equals(overwrite)) {
             if (!confirmOverwrite()) {
                 // 用户取消，直接退出
@@ -63,6 +63,7 @@ public class Generator {
             .strategyConfig(builder ->
                 // 设置需要生成的表名
                 builder.addInclude(tables)
+                    .addTablePrefix(prefix)
                     .entityBuilder()
                         .enableLombok()
                         .enableTableFieldAnnotation()

@@ -12,5 +12,5 @@ public class User {
 
     private String id;
 
-    private String accName;
+    private String userName;
 }

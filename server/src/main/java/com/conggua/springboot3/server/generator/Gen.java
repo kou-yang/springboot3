@@ -31,14 +31,23 @@ public class Gen {
     private static final String PARENT_PACKAGE = "com.conggua.springboot3.server";
 
     /**
+     * 表前缀
+     */
+    private static final List<String> PREFIX = List.of("biz");
+
+    /**
      * 需要生成的表(默认不覆盖)
      */
-    private static final List<String> TABLES = List.of("crm_company", "sys_role");
+    private static final List<String> TABLES = List.of(
+            "sys_role",
+            "sys_permission",
+            "sys_role_permission"
+    );
 
     public static void main(String[] args) {
         // 加载properties文件
         YamlPropertiesFactoryBean factory = new YamlPropertiesFactoryBean();
-        factory.setResources(new ClassPathResource("application-dev.yaml"));
+        factory.setResources(new ClassPathResource("application-test.yaml"));
         Properties properties = factory.getObject();
         Assert.notNull(properties, "配置文件不存在");
         // 获取数据库配置值
@@ -49,6 +58,6 @@ public class Gen {
             throw new BusinessException(CommonErrorEnum.NOT_FOUND_ERROR, "缺少数据库配置");
         }
         // 生成模版代码
-        Generator.create(url, username, password, TABLES, MODULE, PARENT_PACKAGE);
+        Generator.create(true, url, username, password, TABLES, PREFIX, MODULE, PARENT_PACKAGE);
     }
 }
