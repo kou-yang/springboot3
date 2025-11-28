@@ -14,6 +14,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.lang.reflect.UndeclaredThrowableException;
+
 /**
  * 全局异常处理器
  *
@@ -48,6 +50,16 @@ public class GlobalExceptionHandler {
         ex.getBindingResult().getFieldErrors().forEach(x -> errorMsg.append(x.getField()).append(":").append(x.getDefaultMessage()).append(";"));
         String message = errorMsg.toString();
         return ResultUtils.error(CommonErrorEnum.REQUEST_PARAM_INVALID_ERROR, message.substring(0, message.length() - 1));
+    }
+
+    @ExceptionHandler(UndeclaredThrowableException.class)
+    public Result<?> undeclaredThrowableExceptionHandler(UndeclaredThrowableException ex) {
+        log.error("undeclaredThrowableException", ex);
+        Throwable cause = ex.getCause();
+        if (cause != null) {
+            return ResultUtils.error(CommonErrorEnum.SYSTEM_ERROR, cause.getMessage());
+        }
+        return ResultUtils.error(CommonErrorEnum.SYSTEM_ERROR, ex.getMessage());
     }
 
     @ExceptionHandler(value = DuplicateKeyException.class)
