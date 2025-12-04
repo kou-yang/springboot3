@@ -6,8 +6,10 @@ import com.baomidou.mybatisplus.extension.plugins.inner.DataPermissionIntercepto
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.conggua.common.web.handler.CustomDataPermissionHandler;
 import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 
 /**
  * @author: kouyang
@@ -18,11 +20,15 @@ import org.springframework.context.annotation.Configuration;
 @MapperScan("com.conggua.springboot3.server.mapper")
 public class MyBatisPlusConfig {
 
+    @Autowired
+    @Lazy
+    private CustomDataPermissionHandler customDataPermissionHandler;
+
     @Bean
     public MybatisPlusInterceptor mybatisPlusInterceptor() {
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
+        interceptor.addInnerInterceptor(new DataPermissionInterceptor(customDataPermissionHandler));
         interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
-        interceptor.addInnerInterceptor(new DataPermissionInterceptor(new CustomDataPermissionHandler()));
         return interceptor;
     }
 }

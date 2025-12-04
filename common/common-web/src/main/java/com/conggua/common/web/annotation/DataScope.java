@@ -17,6 +17,11 @@ import java.lang.annotation.Target;
 public @interface DataScope {
 
     /**
+     * 表名称
+     */
+    String tableName() default "";
+
+    /**
      * 部门id字段名称
      */
     String departField() default "depart_id";

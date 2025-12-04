@@ -2,7 +2,6 @@ package com.conggua.common.web.handler;
 
 import com.baomidou.mybatisplus.extension.plugins.handler.MultiDataPermissionHandler;
 import com.conggua.common.base.util.CollStreamUtils;
-import com.conggua.common.base.util.SpringContextUtils;
 import com.conggua.common.web.annotation.DataScope;
 import com.conggua.common.web.constant.DataScopeEnum;
 import com.conggua.common.web.provider.DataScopeProvider;
@@ -12,25 +11,31 @@ import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.schema.Table;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author: kouyang
  * @description:
  * @date: 2025-11-05 11:05
  */
+@Component
 public class CustomDataPermissionHandler implements MultiDataPermissionHandler {
 
     private static final String NO_PERMISSION_SQL = "1 = 0";
+
+    @Autowired
+    private DataScopeProvider provider;
 
     @SneakyThrows
     @Override
     public Expression getSqlSegment(Table table, Expression where, String mappedStatementId) {
         DataScope dataScope = DataScopeContext.get();
-        DataScopeProvider provider = SpringContextUtils.getBean(DataScopeProvider.class);
         // 无注解或该表数据不用做数据权限控制，不追加条件
-        if (dataScope == null || !provider.getPermissionTables().contains(table.getFullyQualifiedName())) {
+        if (dataScope == null || !Objects.equals(table.getFullyQualifiedName(), dataScope.tableName())) {
             return null;
         }
         if (provider.isAdmin()) {

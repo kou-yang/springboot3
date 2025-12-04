@@ -12,14 +12,6 @@ import java.util.List;
 public interface DataScopeProvider {
 
     /**
-     * 获取需要做数据权限控制的表名
-     * @return
-     */
-    default List<String> getPermissionTables() {
-        return List.of();
-    }
-
-    /**
      * 获取当前用户数据权限列表
      * @return
      */
