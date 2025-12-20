@@ -66,7 +66,7 @@ public class CustomDataPermissionHandler implements MultiDataPermissionHandler {
         // 个人数据权限
         if (permissions.contains(DataScopeEnum.SELF.getCode())) {
             // create_by = '1'
-            sqlSegment = userField + " = " + provider.getCurrentUserId();
+            sqlSegment = userField + " = '" + provider.getCurrentUserId() + "'";
         }
         return CCJSqlParserUtil.parseCondExpression(sqlSegment);
     }

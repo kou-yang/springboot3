@@ -95,4 +95,26 @@ public interface BaseService<T> extends IService<T> {
     default boolean removeBy(SFunction<T, ?> column, Object value) {
         return lambdaUpdate().eq(column, value).remove();
     }
+
+    /**
+     * 根据字段 EQ 删除数据
+     * @param columnOne
+     * @param valueOne
+     * @param columnTwo
+     * @param valueTwo
+     * @return
+     */
+    default boolean removeBy(SFunction<T, ?> columnOne, Object valueOne, SFunction<T, ?> columnTwo, Object valueTwo) {
+        return lambdaUpdate().eq(columnOne, valueOne).eq(columnTwo, valueTwo).remove();
+    }
+
+    /**
+     * 根据字段 IN 删除数据
+     * @param column
+     * @param value
+     * @return
+     */
+    default boolean removeIn(SFunction<T, ?> column, Object value) {
+        return lambdaUpdate().in(column, value).remove();
+    }
 }

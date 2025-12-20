@@ -10,7 +10,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>com.conggua</groupId>
+    <groupId>com.conggua.springboot3.template</groupId>
     <artifactId>springboot3</artifactId>
     <version>3.0.0</version>
     <packaging>pom</packaging>
