@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,10 +30,19 @@ public class LogAspect {
 
     private final ObjectMapper objectMapper;
 
+    @Pointcut("@within(org.springframework.web.bind.annotation.RestController) || " +
+              "@annotation(org.springframework.web.bind.annotation.RequestMapping) || " +
+              "@annotation(org.springframework.web.bind.annotation.GetMapping) || " +
+              "@annotation(org.springframework.web.bind.annotation.PostMapping) || " +
+              "@annotation(org.springframework.web.bind.annotation.PutMapping) || " +
+              "@annotation(org.springframework.web.bind.annotation.DeleteMapping)")
+    public void pointcut() {}
+
     /**
      * 执行拦截
      */
-    @Around("execution(* com..controller.*.*(..))")
+//    @Around("execution(* com..controller.*.*(..))")
+    @Around("pointcut()")
     public Object doInterceptor(ProceedingJoinPoint point) throws Throwable {
         // 计时
         StopWatch stopWatch = new StopWatch();

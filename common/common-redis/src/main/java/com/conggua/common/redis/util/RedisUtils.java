@@ -137,6 +137,15 @@ public class RedisUtils {
     }
 
     /**
+     * 批量设置key-value
+     *
+     * @param map
+     */
+    public static void mSet(Map<String, Object> map) {
+        redisTemplate.opsForValue().multiSet(map);
+    }
+
+    /**
      * 仅当key不存在时，设置key的值
      *
      * @param key

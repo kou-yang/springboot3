@@ -33,7 +33,7 @@ public class Gen {
     /**
      * 表前缀
      */
-    private static final List<String> PREFIX = List.of("biz");
+    private static final List<String> PREFIX = List.of("sys");
 
     /**
      * 需要生成的表(默认不覆盖)
