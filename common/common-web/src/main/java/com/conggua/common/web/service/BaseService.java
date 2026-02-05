@@ -114,7 +114,10 @@ public interface BaseService<T> extends IService<T> {
      * @param value
      * @return
      */
-    default boolean removeIn(SFunction<T, ?> column, Object value) {
+    default boolean removeIn(SFunction<T, ?> column, List<Object> value) {
+        if (CollectionUtils.isEmpty(value)) {
+            return true;
+        }
         return lambdaUpdate().in(column, value).remove();
     }
 }

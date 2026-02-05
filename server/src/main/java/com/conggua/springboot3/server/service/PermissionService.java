@@ -8,6 +8,9 @@ import com.conggua.springboot3.server.model.dto.PermissionUpdateDTO;
 import com.conggua.springboot3.server.model.entity.Permission;
 import com.conggua.springboot3.server.model.vo.PermissionDetailVO;
 import com.conggua.springboot3.server.model.vo.PermissionPageVO;
+import com.conggua.springboot3.server.model.vo.UserPermissionVO;
+
+import java.util.List;
 
 /**
  * @author kouyang
@@ -46,4 +49,12 @@ public interface PermissionService extends BaseService<Permission> {
      * @return
      */
     PermissionDetailVO getDetail(String id);
+
+    /**
+     * 获取所有权限
+     * @param type
+     * @param status
+     * @return
+     */
+    List<UserPermissionVO> all(String type, Boolean status);
 }

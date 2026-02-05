@@ -71,7 +71,7 @@ public class Permission implements Serializable {
 
     @Schema(description = "状态：0-禁用，1-启用")
     @TableField("status")
-    private Byte status;
+    private Boolean status;
 
     @Schema(description = "备注")
     @TableField("remark")

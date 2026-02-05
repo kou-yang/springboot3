@@ -11,6 +11,7 @@ import com.conggua.springboot3.server.model.dto.PermissionUpdateDTO;
 import com.conggua.springboot3.server.model.entity.Permission;
 import com.conggua.springboot3.server.model.vo.PermissionDetailVO;
 import com.conggua.springboot3.server.model.vo.PermissionPageVO;
+import com.conggua.springboot3.server.model.vo.UserPermissionVO;
 import com.conggua.springboot3.server.service.PermissionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,7 +25,7 @@ import java.util.List;
  * @author kouyang
  * @since 2026-01-09
  */
-@Tag(name = "权限管理")
+@Tag(name = "sys-权限管理")
 @RestController
 @RequestMapping("/permission")
 @RequiredArgsConstructor
@@ -48,7 +49,7 @@ public class PermissionController {
     }
 
     @Operation(summary = "更新")
-    @Idempotent(key = "#dto.code")
+    @Idempotent(key = "#dto.code ?: 'default_code'")
     @PostMapping("/update")
     public Result<?> update(@Validated @RequestBody PermissionUpdateDTO dto) {
         Permission entity = permissionService.update(dto);
@@ -71,8 +72,8 @@ public class PermissionController {
 
     @Operation(summary = "查询全部")
     @GetMapping("/all")
-    public Result<List<Permission>> listAll() {
-        List<Permission> list = permissionService.list();
-        return ResultUtils.success(list);
+    public Result<List<UserPermissionVO>> listAll(String type, Boolean status) {
+        List<UserPermissionVO> tree = permissionService.all(type, status);
+        return ResultUtils.success(tree);
     }
 }

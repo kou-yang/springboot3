@@ -50,7 +50,7 @@ public class PermissionSaveDTO implements Serializable {
     private String attrs;
 
     @Schema(description = "状态：0-禁用，1-启用")
-    private Byte status;
+    private Boolean status;
 
     @Schema(description = "备注")
     private String remark;

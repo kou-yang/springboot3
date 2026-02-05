@@ -39,9 +39,7 @@ public class Gen {
      * 需要生成的表(默认不覆盖)
      */
     private static final List<String> TABLES = List.of(
-            "sys_role",
-            "sys_permission",
-            "sys_role_permission"
+            "sys_category"
     );
 
     public static void main(String[] args) {

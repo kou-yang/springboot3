@@ -10,7 +10,6 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <groupId>com.conggua.springboot3.template</groupId>
     <artifactId>dependencies</artifactId>
     <packaging>pom</packaging>
 

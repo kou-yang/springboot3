@@ -4,10 +4,10 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.conggua.springboot3.server.model.entity.RolePermission">
-        <id column="id" property="id" />
-        <result column="role_id" property="roleId" />
-        <result column="permission_id" property="permissionId" />
-        <result column="create_time" property="createTime" />
+        <id column="id" property="id"/>
+        <result column="role_id" property="roleId"/>
+        <result column="permission_id" property="permissionId"/>
+        <result column="create_time" property="createTime"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->

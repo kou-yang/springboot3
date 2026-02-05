@@ -15,16 +15,15 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author kouyang
  * @since 2026-01-09
  */
-@Tag(name = "角色权限管理")
+@Tag(name = "sys-角色权限管理")
 @RestController
 @RequestMapping("/rolePermission")
 @RequiredArgsConstructor
@@ -59,5 +58,12 @@ public class RolePermissionController {
     public Result<?> distribute(@Validated @RequestBody DistributePermissionDTO dto) {
         rolePermissionService.distribute(dto);
         return ResultUtils.success();
+    }
+
+    @Operation(summary = "查询角色权限")
+    @GetMapping("/permissions")
+    public Result<List<RolePermission>> listRolePermissions(String type, String roleId) {
+        List<RolePermission> list = rolePermissionService.listBy(RolePermission::getType, type, RolePermission::getRoleId, roleId);
+        return ResultUtils.success(list);
     }
 }

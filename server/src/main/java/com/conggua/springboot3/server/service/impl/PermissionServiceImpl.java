@@ -7,6 +7,7 @@ import com.conggua.common.base.exception.CommonErrorEnum;
 import com.conggua.common.base.util.CRUDUtil;
 import com.conggua.common.base.util.CollStreamUtils;
 import com.conggua.common.base.util.SpringContextUtils;
+import com.conggua.common.base.util.TreeUtils;
 import com.conggua.common.web.model.response.CommonPage;
 import com.conggua.springboot3.server.mapper.PermissionMapper;
 import com.conggua.springboot3.server.model.dto.PermissionPageDTO;
@@ -16,6 +17,7 @@ import com.conggua.springboot3.server.model.entity.Permission;
 import com.conggua.springboot3.server.model.entity.RolePermission;
 import com.conggua.springboot3.server.model.vo.PermissionDetailVO;
 import com.conggua.springboot3.server.model.vo.PermissionPageVO;
+import com.conggua.springboot3.server.model.vo.UserPermissionVO;
 import com.conggua.springboot3.server.service.PermissionService;
 import com.conggua.springboot3.server.service.RolePermissionService;
 import lombok.RequiredArgsConstructor;
@@ -65,7 +67,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     public Permission update(PermissionUpdateDTO dto) {
         Permission old = getById(dto.getId());
         if (StringUtils.isBlank(dto.getCode()) && !Objects.equals(old.getCode(), dto.getCode())) {
-            Permission permission = getBy(Permission::getType, dto.getType(), Permission::getCode, dto.getCode());
+            Permission permission = getBy(Permission::getType, old.getType(), Permission::getCode, dto.getCode());
             if (permission != null) {
                 throw new BusinessException(CommonErrorEnum.PARAMS_ERROR, "权限编码已存在");
             }
@@ -81,6 +83,8 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     public CommonPage<PermissionPageVO> page(PermissionPageDTO dto) {
         Page<Permission> page = dto.startMpPage(Permission.class);
         page = lambdaQuery()
+                .eq(StringUtils.isNotBlank(dto.getType()), Permission::getType, dto.getType())
+                .eq(dto.getStatus() != null, Permission::getStatus, dto.getStatus())
                 .like(StringUtils.isNotBlank(dto.getName()), Permission::getName, dto.getName())
                 .like(StringUtils.isNotBlank(dto.getCode()), Permission::getCode, dto.getCode())
                 .page(page);
@@ -93,6 +97,20 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     public PermissionDetailVO getDetail(String id) {
         Permission entity = this.getById(id);
         return this.entity2DetailVO(entity);
+    }
+
+    @Override
+    public List<UserPermissionVO> all(String type, Boolean status) {
+        List<Permission> list = lambdaQuery()
+                .eq(StringUtils.isNotBlank(type), Permission::getType, type)
+                .eq(status != null, Permission::getStatus, status)
+                .list();
+        List<UserPermissionVO> voList = CollStreamUtils.toList(list, entity -> {
+            UserPermissionVO vo = new UserPermissionVO();
+            BeanUtils.copyProperties(entity, vo);
+            return vo;
+        });
+        return TreeUtils.translate(voList, UserPermissionVO::getId, UserPermissionVO::getParentId);
     }
 
     public List<PermissionPageVO> entityList2PageVOList(List<Permission> entityList) {

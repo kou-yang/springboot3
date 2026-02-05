@@ -24,7 +24,7 @@ import java.util.List;
  * @author kouyang
  * @since 2026-01-09
  */
-@Tag(name = "角色管理")
+@Tag(name = "sys-角色管理")
 @RestController
 @RequestMapping("/role")
 @RequiredArgsConstructor
@@ -48,7 +48,7 @@ public class RoleController {
     }
 
     @Operation(summary = "更新")
-    @Idempotent(key = "#dto.code")
+    @Idempotent(key = "#dto.code ?: 'default_code'")
     @PostMapping("/update")
     public Result<?> update(@Validated @RequestBody RoleUpdateDTO dto) {
         Role entity = roleService.update(dto);

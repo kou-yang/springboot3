@@ -20,4 +20,10 @@ public class PermissionPageDTO extends CommonPageDTO {
 
     @Schema(description = "权限标识符")
     private String code;
+
+    @Schema(description = "资源类型：menu-菜单，button-按钮，api-接口，dataScope-数据权限")
+    private String type;
+
+    @Schema(description = "状态：0-禁用，1-启用")
+    private Boolean status;
 }

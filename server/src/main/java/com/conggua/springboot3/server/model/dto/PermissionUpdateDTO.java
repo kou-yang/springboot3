@@ -2,7 +2,6 @@ package com.conggua.springboot3.server.model.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -37,10 +36,6 @@ public class PermissionUpdateDTO implements Serializable {
     @Schema(description = "权限标识符")
     private String code;
 
-    @Schema(description = "资源类型：menu-菜单，button-按钮，dataScope-数据权限")
-    @Pattern(regexp = "^(?:menu|button|dataScope)?$")
-    private String type;
-
     @Schema(description = "排序值")
     private Integer sort;
 
@@ -57,7 +52,7 @@ public class PermissionUpdateDTO implements Serializable {
     private String attrs;
 
     @Schema(description = "状态：0-禁用，1-启用")
-    private Byte status;
+    private Boolean status;
 
     @Schema(description = "备注")
     private String remark;
