@@ -25,6 +25,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -42,8 +43,7 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
     public UserRole save(UserRoleSaveDTO dto) {
         UserRole entity = new UserRole();
         BeanUtils.copyProperties(dto, entity);
-        boolean one = this.save(entity);
-        CRUDUtil.validateSaveSuccess(one);
+        this.save(entity);
         return entity;
     }
 
@@ -57,8 +57,7 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
     public UserRole update(UserRoleUpdateDTO dto) {
         UserRole entity = new UserRole();
         BeanUtils.copyProperties(dto, entity);
-        boolean one = this.updateById(entity);
-        CRUDUtil.validateUpdateSuccess(one);
+        this.updateById(entity);
         return entity;
     }
 
@@ -100,6 +99,9 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
     }
 
     public List<UserRolePageVO> entityList2PageVOList(List<UserRole> entityList) {
+        if (CollectionUtils.isEmpty(entityList)) {
+            return Collections.emptyList();
+        }
         return CollStreamUtils.toList(entityList, entity -> {
             UserRolePageVO vo = new UserRolePageVO();
             BeanUtils.copyProperties(entity, vo);

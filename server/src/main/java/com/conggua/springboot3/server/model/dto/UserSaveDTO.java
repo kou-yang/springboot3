@@ -32,6 +32,7 @@ public class UserSaveDTO implements Serializable {
     private String password;
 
     @Schema(description = "用户名")
+    @NotBlank
     private String userName;
 
     @Schema(description = "手机号")

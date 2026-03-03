@@ -36,6 +36,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -58,8 +59,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public User save(UserSaveDTO dto) {
         User entity = new User();
         BeanUtils.copyProperties(dto, entity);
-        boolean one = this.save(entity);
-        CRUDUtil.validateSaveSuccess(one);
+        this.save(entity);
         return entity;
     }
 
@@ -73,15 +73,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public User update(UserUpdateDTO dto) {
         User entity = new User();
         BeanUtils.copyProperties(dto, entity);
-        boolean one = this.updateById(entity);
-        CRUDUtil.validateUpdateSuccess(one);
+        this.updateById(entity);
         return entity;
     }
 
     @Override
     public CommonPage<UserPageVO> page(UserPageDTO dto) {
         Page<User> page = dto.startMpPage(User.class);
-        page = lambdaQuery().page(page);
+        page = lambdaQuery()
+                .like(StringUtils.isNotBlank(dto.getAccount()), User::getAccount, dto.getAccount())
+                .like(StringUtils.isNotBlank(dto.getUserName()), User::getUserName, dto.getUserName())
+                .like(StringUtils.isNotBlank(dto.getPhone()), User::getPhone, dto.getPhone())
+                .page(page);
         // entity转vo
         List<UserPageVO> voList = this.entityList2PageVOList(page.getRecords());
         return CommonPage.restPage(voList, page.getTotal());
@@ -176,6 +179,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     public List<UserPageVO> entityList2PageVOList(List<User> entityList) {
+        if (CollectionUtils.isEmpty(entityList)) {
+            return Collections.emptyList();
+        }
         return CollStreamUtils.toList(entityList, entity -> {
             UserPageVO vo = new UserPageVO();
             BeanUtils.copyProperties(entity, vo);

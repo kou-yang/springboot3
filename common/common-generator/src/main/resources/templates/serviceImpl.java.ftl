@@ -15,10 +15,21 @@ import com.conggua.common.base.util.CRUDUtil;
 import com.conggua.common.web.model.response.CommonPage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.Assert;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.apache.commons.collections4.CollectionUtils;
 
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Collections;
 
 /**
  * @author ${author}
@@ -33,23 +44,21 @@ public class ${table.serviceImplName} extends ServiceImpl<${table.mapperName}, $
     public ${entity} save(${entity}SaveDTO dto) {
         ${entity} entity = new ${entity}();
         BeanUtils.copyProperties(dto, entity);
-        boolean one = this.save(entity);
-        CRUDUtil.validateSaveSuccess(one);
+        this.save(entity);
         return entity;
     }
 
     @Override
     public void remove(String id) {
-        boolean one = this.removeById(id);
-        CRUDUtil.validateDeleteSuccess(one);
+        boolean success = this.removeById(id);
+        CRUDUtil.validateDeleteSuccess(success);
     }
 
     @Override
     public ${entity} update(${entity}UpdateDTO dto) {
         ${entity} entity = new ${entity}();
         BeanUtils.copyProperties(dto, entity);
-        boolean one = this.updateById(entity);
-        CRUDUtil.validateUpdateSuccess(one);
+        this.updateById(entity);
         return entity;
     }
 
@@ -69,6 +78,9 @@ public class ${table.serviceImplName} extends ServiceImpl<${table.mapperName}, $
     }
 
     public List<${entity}PageVO> entityList2PageVOList(List<${entity}> entityList) {
+        if (CollectionUtils.isEmpty(entityList)) {
+            return Collections.emptyList();
+        }
         return CollStreamUtils.toList(entityList, entity -> {
             ${entity}PageVO vo = new ${entity}PageVO();
             BeanUtils.copyProperties(entity, vo);
@@ -83,5 +95,18 @@ public class ${table.serviceImplName} extends ServiceImpl<${table.mapperName}, $
         ${entity}DetailVO vo = new ${entity}DetailVO();
         BeanUtils.copyProperties(entity, vo);
         return vo;
+    }
+
+    @Override
+    public ResponseEntity<Resource> downloadTemplate() {
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream("template/import/导入模版.xlsx");
+        Assert.notNull(inputStream, "File not found");
+        ContentDisposition contentDisposition = ContentDisposition.builder("attachment")
+                .filename("导入模版.xlsx", StandardCharsets.UTF_8)
+                .build();
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition.toString())
+                .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .body(new InputStreamResource(inputStream));
     }
 }

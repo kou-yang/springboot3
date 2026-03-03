@@ -3,6 +3,7 @@ package ${package.Controller};
 import com.conggua.common.base.common.Result;
 import com.conggua.common.base.common.ResultUtils;
 import com.conggua.common.web.model.request.PrimaryKeyDTO;
+import com.conggua.common.web.model.request.PrimaryKeysDTO;
 import com.conggua.common.web.model.response.CommonPage;
 import ${package.Entity}.${entity};
 import ${package.Service}.${table.serviceName};
@@ -14,6 +15,8 @@ import ${package.Parent}.model.vo.${entity}DetailVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,6 +59,13 @@ public class ${table.controllerName} {
         return ResultUtils.success();
     }
 
+    @Operation(summary = "批量删除")
+    @PostMapping("/batch/delete")
+    public Result<?> deleteBatch(@Validated @RequestBody PrimaryKeysDTO dto) {
+        dto.ids().forEach(${table.entityPath}Service::remove);
+        return ResultUtils.success();
+    }
+
     @Operation(summary = "更新")
     @PostMapping("/update")
     public Result<?> update(@Validated @RequestBody ${entity}UpdateDTO dto) {
@@ -82,6 +92,12 @@ public class ${table.controllerName} {
     public Result<List<${entity}>> listAll() {
         List<${entity}> list = ${table.entityPath}Service.list();
         return ResultUtils.success(list);
+    }
+
+    @Operation(summary = "下载导入模版")
+    @PostMapping("/template/download")
+    public ResponseEntity<Resource> downloadTemplate() {
+        return ${table.entityPath}Service.downloadTemplate();
     }
 }
 </#if>

@@ -15,9 +15,11 @@ import com.conggua.springboot3.server.model.vo.CategoryPageVO;
 import com.conggua.springboot3.server.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -33,23 +35,21 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     public Category save(CategorySaveDTO dto) {
         Category entity = new Category();
         BeanUtils.copyProperties(dto, entity);
-        boolean one = this.save(entity);
-        CRUDUtil.validateSaveSuccess(one);
+        this.save(entity);
         return entity;
     }
 
     @Override
     public void remove(String id) {
-        boolean one = this.removeById(id);
-        CRUDUtil.validateDeleteSuccess(one);
+        boolean success = this.removeById(id);
+        CRUDUtil.validateDeleteSuccess(success);
     }
 
     @Override
     public Category update(CategoryUpdateDTO dto) {
         Category entity = new Category();
         BeanUtils.copyProperties(dto, entity);
-        boolean one = this.updateById(entity);
-        CRUDUtil.validateUpdateSuccess(one);
+        this.updateById(entity);
         return entity;
     }
 
@@ -71,6 +71,9 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     }
 
     public List<CategoryPageVO> entityList2PageVOList(List<Category> entityList) {
+        if (CollectionUtils.isEmpty(entityList)) {
+            return Collections.emptyList();
+        }
         return CollStreamUtils.toList(entityList, entity -> {
             CategoryPageVO vo = new CategoryPageVO();
             BeanUtils.copyProperties(entity, vo);

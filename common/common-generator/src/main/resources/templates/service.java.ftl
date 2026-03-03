@@ -8,6 +8,8 @@ import ${package.Parent}.model.dto.${entity}PageDTO;
 import ${package.Parent}.model.vo.${entity}PageVO;
 import ${package.Parent}.model.vo.${entity}DetailVO;
 import com.conggua.common.web.model.response.CommonPage;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 
 /**
  * @author ${author}
@@ -49,5 +51,11 @@ public interface ${table.serviceName} extends BaseService<${entity}> {
      * @return
      */
     ${entity}DetailVO getDetail(String id);
+
+    /**
+     * 下载模板
+     * @return
+     */
+    ResponseEntity<Resource> downloadTemplate();
 }
 </#if>

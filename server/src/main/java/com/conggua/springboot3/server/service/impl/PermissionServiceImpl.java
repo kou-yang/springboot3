@@ -22,11 +22,13 @@ import com.conggua.springboot3.server.service.PermissionService;
 import com.conggua.springboot3.server.service.RolePermissionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -47,8 +49,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         }
         Permission entity = new Permission();
         BeanUtils.copyProperties(dto, entity);
-        boolean one = this.save(entity);
-        CRUDUtil.validateSaveSuccess(one);
+        this.save(entity);
         return entity;
     }
 
@@ -74,8 +75,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         }
         Permission entity = new Permission();
         BeanUtils.copyProperties(dto, entity);
-        boolean one = this.updateById(entity);
-        CRUDUtil.validateUpdateSuccess(one);
+        this.updateById(entity);
         return entity;
     }
 
@@ -114,6 +114,9 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     }
 
     public List<PermissionPageVO> entityList2PageVOList(List<Permission> entityList) {
+        if (CollectionUtils.isEmpty(entityList)) {
+            return Collections.emptyList();
+        }
         return CollStreamUtils.toList(entityList, entity -> {
             PermissionPageVO vo = new PermissionPageVO();
             BeanUtils.copyProperties(entity, vo);

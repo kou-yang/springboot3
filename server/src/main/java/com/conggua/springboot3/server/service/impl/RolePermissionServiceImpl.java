@@ -29,6 +29,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -56,8 +57,7 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
         RolePermission entity = new RolePermission();
         BeanUtils.copyProperties(dto, entity);
         entity.setType(permission.getType());
-        boolean one = this.save(entity);
-        CRUDUtil.validateSaveSuccess(one);
+        this.save(entity);
         return entity;
     }
 
@@ -71,8 +71,7 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
     public RolePermission update(RolePermissionUpdateDTO dto) {
         RolePermission entity = new RolePermission();
         BeanUtils.copyProperties(dto, entity);
-        boolean one = this.updateById(entity);
-        CRUDUtil.validateUpdateSuccess(one);
+        this.updateById(entity);
         return entity;
     }
 
@@ -123,6 +122,9 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
     }
 
     public List<RolePermissionPageVO> entityList2PageVOList(List<RolePermission> entityList) {
+        if (CollectionUtils.isEmpty(entityList)) {
+            return Collections.emptyList();
+        }
         Map<String, String> roleNameMap = CollStreamUtils.toMap(roleService.list(), Role::getId, Role::getName);
         Map<String, String> permissionNameMap = CollStreamUtils.toMap(permissionService.list(), Permission::getId, Permission::getName);
         return CollStreamUtils.toList(entityList, entity -> {
