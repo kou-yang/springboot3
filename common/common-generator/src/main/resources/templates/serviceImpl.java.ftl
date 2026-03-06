@@ -6,8 +6,10 @@ import ${package.Service}.${table.serviceName};
 import ${package.Parent}.model.dto.${entity}SaveDTO;
 import ${package.Parent}.model.dto.${entity}UpdateDTO;
 import ${package.Parent}.model.dto.${entity}PageDTO;
+import ${package.Parent}.model.dto.im.${entity}ImportDTO;
 import ${package.Parent}.model.vo.${entity}PageVO;
 import ${package.Parent}.model.vo.${entity}DetailVO;
+import ${package.Parent}.listener.${entity}ImportListener;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.conggua.common.base.util.CollStreamUtils;
@@ -24,7 +26,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.fesod.sheet.FesodSheet;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -108,5 +112,13 @@ public class ${table.serviceImplName} extends ServiceImpl<${table.mapperName}, $
                 .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition.toString())
                 .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
                 .body(new InputStreamResource(inputStream));
+    }
+
+    @SneakyThrows
+    @Override
+    public void im(MultipartFile file) {
+        FesodSheet.read(file.getInputStream(), DepartImportDTO.class, new DepartImportListener())
+                .sheet()
+                .doRead();
     }
 }

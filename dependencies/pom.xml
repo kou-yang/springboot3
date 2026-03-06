@@ -21,7 +21,7 @@
         <commons-collections4.version>4.4</commons-collections4.version>
         <hotool.version>5.8.39</hotool.version>
         <jwt.version>4.4.0</jwt.version>
-        <fastexcel.version>1.2.0</fastexcel.version>
+        <fesod.version>2.0.1-incubating</fesod.version>
         <knife4j.openapi3.version>4.5.0</knife4j.openapi3.version>
         <mybatis-plus-bom.version>3.5.12</mybatis-plus-bom.version>
         <druid.version>1.2.27</druid.version>
@@ -63,9 +63,9 @@
                 <version>${jwt.version}</version>
             </dependency>
             <dependency>
-                <groupId>cn.idev.excel</groupId>
-                <artifactId>fastexcel</artifactId>
-                <version>${fastexcel.version}</version>
+                <groupId>org.apache.fesod</groupId>
+                <artifactId>fesod-sheet</artifactId>
+                <version>${fesod.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.github.xiaoymin</groupId>

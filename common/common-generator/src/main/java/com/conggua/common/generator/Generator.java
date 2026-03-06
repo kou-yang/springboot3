@@ -96,6 +96,8 @@ public class Generator {
                 customMap.put("updateDTOPackage", parentPackage + ".model.dto");
                 customMap.put("pageDTOPackage", parentPackage + ".model.dto");
                 customMap.put("voPackage", parentPackage + ".model.vo");
+                customMap.put("importDTOPackage", parentPackage + ".model.dto.im");
+                customMap.put("importListenerPackage", parentPackage + ".listener");
                 builder.customMap(customMap);
 
                 // 覆盖模式
@@ -141,6 +143,16 @@ public class Generator {
                         .fileName("DetailVO.java")
                         .templatePath("/templates/detailVO.java.ftl")
                         .packageName("model.vo")
+                )
+                .customFile(b -> b
+                        .fileName("ImportDTO.java")
+                        .templatePath("/templates/importDTO.java.ftl")
+                        .packageName("model.dto.im")
+                )
+                .customFile(b -> b
+                        .fileName("ImportListener.java")
+                        .templatePath("/templates/importListener.java.ftl")
+                        .packageName("listener")
                 );
             })
             .templateEngine(new FreemarkerTemplateEngine())
@@ -184,6 +196,10 @@ public class Generator {
             paths.add(javaDir + "/" + entityPackagePath + "/model/dto/" + className + "PageDTO.java");
             paths.add(javaDir + "/" + entityPackagePath + "/model/vo/" + className + "PageVO.java");
             paths.add(javaDir + "/" + entityPackagePath + "/model/vo/" + className + "DetailVO.java");
+
+            // 8. 自定义 ImportDTO/ImportListener
+            paths.add(javaDir + "/" + entityPackagePath + "/model/dto/im/" + className + "ImportDTO.java");
+            paths.add(javaDir + "/" + entityPackagePath + "/listener/" + className + "ImportListener.java");
         });
 
         for (String filePath : paths) {
@@ -238,6 +254,9 @@ public class Generator {
         paths.add(javaDir + "/" + entityPackagePath + "/model/vo/" + className + "PageVO.java");
         paths.add(javaDir + "/" + entityPackagePath + "/model/vo/" + className + "DetailVO.java");
 
+        // 8. 自定义 ImportDTO/ImportListener
+        paths.add(javaDir + "/" + entityPackagePath + "/model/dto/im/" + className + "ImportDTO.java");
+        paths.add(javaDir + "/" + entityPackagePath + "/listener/" + className + "ImportListener.java");
         return paths;
     }
 

@@ -19,6 +19,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -98,6 +99,13 @@ public class ${table.controllerName} {
     @PostMapping("/template/download")
     public ResponseEntity<Resource> downloadTemplate() {
         return ${table.entityPath}Service.downloadTemplate();
+    }
+
+    @Operation(summary = "导入")
+    @PostMapping("/import")
+    public Result<?> im(MultipartFile file) {
+        departService.im(file);
+        return ResultUtils.success();
     }
 }
 </#if>

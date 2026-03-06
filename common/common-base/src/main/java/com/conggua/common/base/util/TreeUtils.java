@@ -1,6 +1,7 @@
 package com.conggua.common.base.util;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 import java.util.function.Function;
@@ -11,6 +12,14 @@ import java.util.function.Function;
  * @date 2024-05-04 23:48
  */
 public class TreeUtils {
+
+    /**
+     * 设置子节点的函数式接口
+     */
+    @FunctionalInterface
+    public interface ChildrenSetter<T> {
+        void setChildren(T parent, T child);
+    }
 
     /**
      * 将列表转换为树形结构（默认子节点名称为 "children"）
@@ -115,7 +124,7 @@ public class TreeUtils {
      * @param <K>            ID 类型
      * @return 从目标节点到根节点的路径列表，若未找到则返回空列表
      */
-    public static <T, K> List<T> getPathToList(List<T> list, K targetId, Function<T, K> idGetter, Function<T, K> parentIdGetter) {
+    public static <T, K> List<T> getPathFromList(List<T> list, K targetId, Function<T, K> idGetter, Function<T, K> parentIdGetter) {
         if (CollectionUtils.isEmpty(list) || Objects.isNull(targetId)) {
             return Collections.emptyList();
         }
@@ -140,11 +149,28 @@ public class TreeUtils {
     }
 
     /**
-     * 设置子节点的函数式接口
+     * 构建节点全路径对应的id Map
+     *
+     * @param nodes          节点对象集合
+     * @param idGetter       获取节点 ID 的函数
+     * @param parentIdGetter 获取父节点 ID 的函数
+     * @param nameGetter     获取节点名称的函数
+     * @param rootParentId   根节点的父节点 ID
+     * @param delimiter      路径分隔符
+     * @param <T>            节点类型
+     * @return 节点路径
      */
-    @FunctionalInterface
-    public interface ChildrenSetter<T> {
-        void setChildren(T parent, T child);
+    public static <T> Map<String, String> buildFullPath2IdMap(
+            List<T> nodes,
+            Function<T, String> idGetter,
+            Function<T, String> parentIdGetter,
+            Function<T, String> nameGetter,
+            String rootParentId,
+            String delimiter) {
+        // 构建 id -> node 的映射
+        Map<String, T> idToNodeMap = CollStreamUtils.toMap(nodes, idGetter, Function.identity());
+        // 构建 path -> id 的映射
+        return CollStreamUtils.toMap(nodes, node -> buildNodeFullPath(node, idToNodeMap, parentIdGetter, nameGetter, rootParentId, delimiter), idGetter);
     }
 
     /**
@@ -169,6 +195,41 @@ public class TreeUtils {
                 throw new RuntimeException("Failed to set children for parent node", e);
             }
         }
+    }
+
+    /**
+     * 构建节点全路径
+     *
+     * @param node           节点对象
+     * @param idToNodeMap    id 到节点对象的映射
+     * @param parentIdGetter 获取父节点 ID 的函数
+     * @param nameGetter     获取节点名称的函数
+     * @param rootParentId   根节点的父节点 ID
+     * @param delimiter      路径分隔符
+     * @param <T>            节点类型
+     * @return 节点路径
+     */
+    private static <T> String buildNodeFullPath(
+            T node,
+            Map<String, T> idToNodeMap,
+            Function<T, String> parentIdGetter,
+            Function<T, String> nameGetter,
+            String rootParentId,
+            String delimiter) {
+        if (node == null) {
+            return "";
+        }
+
+        String parentId = parentIdGetter.apply(node);
+        if (Objects.equals(parentId, rootParentId)) {
+            return nameGetter.apply(node);
+        }
+
+        T parent = idToNodeMap.get(parentId);
+        String parentPath = buildNodeFullPath(parent, idToNodeMap, parentIdGetter, nameGetter, rootParentId, delimiter);
+
+        String currentName = nameGetter.apply(node);
+        return StringUtils.isBlank(parentPath) ? currentName : parentPath + delimiter + currentName;
     }
 }
 

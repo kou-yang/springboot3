@@ -10,6 +10,7 @@ import ${package.Parent}.model.vo.${entity}DetailVO;
 import com.conggua.common.web.model.response.CommonPage;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @author ${author}
@@ -57,5 +58,11 @@ public interface ${table.serviceName} extends BaseService<${entity}> {
      * @return
      */
     ResponseEntity<Resource> downloadTemplate();
+
+    /**
+     * 导入
+     * @param file
+     */
+    void im(MultipartFile file);
 }
 </#if>
