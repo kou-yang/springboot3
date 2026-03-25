@@ -104,7 +104,7 @@ public class ${table.controllerName} {
     @Operation(summary = "导入")
     @PostMapping("/import")
     public Result<?> im(MultipartFile file) {
-        departService.im(file);
+        ${table.entityPath}Service.im(file);
         return ResultUtils.success();
     }
 }

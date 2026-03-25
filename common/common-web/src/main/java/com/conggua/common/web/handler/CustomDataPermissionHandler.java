@@ -48,7 +48,6 @@ public class CustomDataPermissionHandler implements MultiDataPermissionHandler {
         if (CollectionUtils.isEmpty(permissions)) {
             return CCJSqlParserUtil.parseCondExpression(NO_PERMISSION_SQL);
         }
-        String sqlSegment = "";
         // 所有数据权限
         if (permissions.contains(DataScopeEnum.ALL.getCode())) {
             return null;
@@ -56,19 +55,22 @@ public class CustomDataPermissionHandler implements MultiDataPermissionHandler {
         // 本部门及以下数据权限
         if (permissions.contains(DataScopeEnum.DEPART_CHILDREN.getCode())) {
             // depart_id IN ('1','2','3')
-            sqlSegment = buildSqlSegment(departField, provider.getDepartIdsAndChildren());
+            String sqlSegment = buildSqlSegment(departField, provider.getDepartIdsAndChildren());
+            return CCJSqlParserUtil.parseCondExpression(sqlSegment);
         }
         // 本部门数据权限
         if (permissions.contains(DataScopeEnum.DEPART.getCode())) {
             // depart_id IN ('1','2','3')
-            sqlSegment = buildSqlSegment(departField, provider.getDepartIds());
+            String sqlSegment = buildSqlSegment(departField, provider.getDepartIds());
+            return CCJSqlParserUtil.parseCondExpression(sqlSegment);
         }
         // 个人数据权限
         if (permissions.contains(DataScopeEnum.SELF.getCode())) {
             // create_by = '1'
-            sqlSegment = userField + " = '" + provider.getCurrentUserId() + "'";
+            String sqlSegment = userField + " = '" + provider.getCurrentUserId() + "'";
+            return CCJSqlParserUtil.parseCondExpression(sqlSegment);
         }
-        return CCJSqlParserUtil.parseCondExpression(sqlSegment);
+        return CCJSqlParserUtil.parseCondExpression(NO_PERMISSION_SQL);
     }
 
     private String buildSqlSegment(String field, List<String> values) {

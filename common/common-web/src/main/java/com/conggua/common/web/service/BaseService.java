@@ -79,7 +79,7 @@ public interface BaseService<T> extends IService<T> {
      * @param values
      * @return
      */
-    default List<T> listIn(SFunction<T, ?> column, List<Object> values) {
+    default List<T> listIn(SFunction<T, ?> column, Collection<?> values) {
         if (CollectionUtils.isEmpty(values)) {
             return Collections.emptyList();
         }
@@ -114,7 +114,7 @@ public interface BaseService<T> extends IService<T> {
      * @param value
      * @return
      */
-    default boolean removeIn(SFunction<T, ?> column, List<Object> value) {
+    default boolean removeIn(SFunction<T, ?> column, Collection<?> value) {
         if (CollectionUtils.isEmpty(value)) {
             return true;
         }

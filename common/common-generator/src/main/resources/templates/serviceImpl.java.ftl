@@ -17,6 +17,7 @@ import com.conggua.common.base.util.CRUDUtil;
 import com.conggua.common.web.model.response.CommonPage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import lombok.SneakyThrows;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ContentDisposition;
@@ -117,7 +118,7 @@ public class ${table.serviceImplName} extends ServiceImpl<${table.mapperName}, $
     @SneakyThrows
     @Override
     public void im(MultipartFile file) {
-        FesodSheet.read(file.getInputStream(), DepartImportDTO.class, new DepartImportListener())
+        FesodSheet.read(file.getInputStream(), ${entity}ImportDTO.class, new ${entity}ImportListener())
                 .sheet()
                 .doRead();
     }
