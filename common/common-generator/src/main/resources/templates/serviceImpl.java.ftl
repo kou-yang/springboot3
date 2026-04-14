@@ -12,6 +12,7 @@ import ${package.Parent}.model.vo.${entity}DetailVO;
 import ${package.Parent}.listener.${entity}ImportListener;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.conggua.common.base.util.CollStreamUtils;
 import com.conggua.common.base.util.CRUDUtil;
 import com.conggua.common.web.model.response.CommonPage;
@@ -70,7 +71,8 @@ public class ${table.serviceImplName} extends ServiceImpl<${table.mapperName}, $
     @Override
     public CommonPage<${entity}PageVO> page(${entity}PageDTO dto) {
         Page<${entity}> page = dto.startMpPage(${entity}.class);
-        page = lambdaQuery().page(page);
+        LambdaQueryChainWrapper<${entity}> wrapper = lambdaQuery();
+        page = wrapper.page(page);
         // entity转vo
         List<${entity}PageVO> voList = this.entityList2PageVOList(page.getRecords());
         return CommonPage.restPage(voList, page.getTotal());

@@ -1,5 +1,21 @@
 package ${importDTOPackage};
 
+<#list table.importPackages as pkg>
+    <#if !pkg?starts_with("com.baomidou.mybatisplus") &&
+    !pkg?starts_with("java.time.LocalDateTime")>
+        import ${pkg};
+    </#if>
+</#list>
+<#-- 检查是否需要导入LocalDateTime -->
+<#assign hasLocalDateTime = false>
+<#list table.fields as field>
+    <#if field.propertyType == "LocalDateTime" && !hasLocalDateTime>
+        <#assign hasLocalDateTime = true>
+    </#if>
+</#list>
+<#if hasLocalDateTime>
+    import java.time.LocalDateTime;
+</#if>
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

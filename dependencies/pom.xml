@@ -33,10 +33,7 @@
         <jaxb-runtime.version>2.3.3</jaxb-runtime.version>
         <cos.version>5.6.227</cos.version>
         <minio.version>8.5.17</minio.version>
-        <wx-java-mp.version>4.7.0</wx-java-mp.version>
-        <wx-java-miniapp.version>4.7.0</wx-java-miniapp.version>
-        <wx-java-cp.version>4.7.0</wx-java-cp.version>
-        <wx-java-pay.version>4.7.0</wx-java-pay.version>
+        <wx-java.version>4.8.0</wx-java.version>
         <freemarker.version>2.3.32</freemarker.version>
     </properties>
 
@@ -131,22 +128,22 @@
             <dependency>
                 <groupId>com.github.binarywang</groupId>
                 <artifactId>wx-java-mp-spring-boot-starter</artifactId>
-                <version>${wx-java-mp.version}</version>
+                <version>${wx-java.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.github.binarywang</groupId>
                 <artifactId>wx-java-miniapp-spring-boot-starter</artifactId>
-                <version>${wx-java-miniapp.version}</version>
+                <version>${wx-java.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.github.binarywang</groupId>
                 <artifactId>wx-java-cp-spring-boot-starter</artifactId>
-                <version>${wx-java-cp.version}</version>
+                <version>${wx-java.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.github.binarywang</groupId>
                 <artifactId>wx-java-pay-spring-boot-starter</artifactId>
-                <version>${wx-java-pay.version}</version>
+                <version>${wx-java.version}</version>
             </dependency>
             <!-- 模版引擎 -->
             <dependency>

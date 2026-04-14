@@ -152,7 +152,7 @@ public class Generator {
                 .customFile(b -> b
                         .fileName("ImportListener.java")
                         .templatePath("/templates/importListener.java.ftl")
-                        .packageName("listener")
+                        .packageName("listener.im")
                 );
             })
             .templateEngine(new FreemarkerTemplateEngine())
@@ -199,7 +199,7 @@ public class Generator {
 
             // 8. 自定义 ImportDTO/ImportListener
             paths.add(javaDir + "/" + entityPackagePath + "/model/dto/im/" + className + "ImportDTO.java");
-            paths.add(javaDir + "/" + entityPackagePath + "/listener/" + className + "ImportListener.java");
+            paths.add(javaDir + "/" + entityPackagePath + "/listener/im/" + className + "ImportListener.java");
         });
 
         for (String filePath : paths) {
@@ -256,7 +256,7 @@ public class Generator {
 
         // 8. 自定义 ImportDTO/ImportListener
         paths.add(javaDir + "/" + entityPackagePath + "/model/dto/im/" + className + "ImportDTO.java");
-        paths.add(javaDir + "/" + entityPackagePath + "/listener/" + className + "ImportListener.java");
+        paths.add(javaDir + "/" + entityPackagePath + "/listener/im/" + className + "ImportListener.java");
         return paths;
     }
 
