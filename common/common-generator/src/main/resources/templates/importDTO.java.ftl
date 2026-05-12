@@ -3,7 +3,7 @@ package ${importDTOPackage};
 <#list table.importPackages as pkg>
     <#if !pkg?starts_with("com.baomidou.mybatisplus") &&
     !pkg?starts_with("java.time.LocalDateTime")>
-        import ${pkg};
+import ${pkg};
     </#if>
 </#list>
 <#-- 检查是否需要导入LocalDateTime -->
@@ -14,7 +14,7 @@ package ${importDTOPackage};
     </#if>
 </#list>
 <#if hasLocalDateTime>
-    import java.time.LocalDateTime;
+import java.time.LocalDateTime;
 </#if>
 import lombok.AllArgsConstructor;
 import lombok.Builder;

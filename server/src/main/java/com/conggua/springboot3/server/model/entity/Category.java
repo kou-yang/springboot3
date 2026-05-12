@@ -47,6 +47,10 @@ public class Category implements Serializable {
     @TableField("name")
     private String name;
 
+    @Schema(description = "排序")
+    @TableField("sort")
+    private Integer sort;
+
     @Schema(description = "备注")
     @TableField("note")
     private String note;

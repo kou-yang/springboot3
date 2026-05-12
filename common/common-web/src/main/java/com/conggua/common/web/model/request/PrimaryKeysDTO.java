@@ -1,7 +1,7 @@
 package com.conggua.common.web.model.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 
 import java.util.List;
 
@@ -13,6 +13,6 @@ import java.util.List;
 public record PrimaryKeysDTO(
 
     @Schema(description = "主键id")
-    @NotBlank
+    @NotEmpty
     List<String> ids
 ) {}

@@ -127,22 +127,22 @@
             <!-- WxJava 相关依赖 -->
             <dependency>
                 <groupId>com.github.binarywang</groupId>
-                <artifactId>wx-java-mp-spring-boot-starter</artifactId>
+                <artifactId>weixin-java-mp</artifactId>
                 <version>${wx-java.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.github.binarywang</groupId>
-                <artifactId>wx-java-miniapp-spring-boot-starter</artifactId>
+                <artifactId>weixin-java-miniapp</artifactId>
                 <version>${wx-java.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.github.binarywang</groupId>
-                <artifactId>wx-java-cp-spring-boot-starter</artifactId>
+                <artifactId>weixin-java-cp</artifactId>
                 <version>${wx-java.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.github.binarywang</groupId>
-                <artifactId>wx-java-pay-spring-boot-starter</artifactId>
+                <artifactId>weixin-java-pay</artifactId>
                 <version>${wx-java.version}</version>
             </dependency>
             <!-- 模版引擎 -->

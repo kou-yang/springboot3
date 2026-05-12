@@ -36,6 +36,9 @@ public class CategoryUpdateDTO implements Serializable {
     @Schema(description = "名称")
     private String name;
 
+    @Schema(description = "排序")
+    private Integer sort;
+
     @Schema(description = "备注")
     private String note;
 }

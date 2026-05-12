@@ -79,4 +79,10 @@ public interface UserService extends BaseService<User> {
      * @return
      */
     List<UserPermissionVO> listUserPermissions(String userId, String type);
+
+    /**
+     * 获取用户信息
+     * @return
+     */
+    UserDetailVO getUserInfo();
 }

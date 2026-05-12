@@ -75,7 +75,7 @@ public class TokenInterceptor implements HandlerInterceptor {
         // RefreshToken 续期
         String userId = (String) request.getAttribute("userId");
         String tenantId = (String) request.getAttribute("tenantId");
-        String refreshKey = RedisKey.getKey(RedisKey.REFRESH_TOKEN, tenantId, userId);
+        String refreshKey = RedisKey.getKeyNoTenant(RedisKey.REFRESH_TOKEN, tenantId, userId);
         RedisUtils.expire(refreshKey, LoginConstant.REFRESH_TOKEN_EXPIRE, TimeUnit.DAYS);
     }
 

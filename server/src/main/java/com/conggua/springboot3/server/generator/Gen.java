@@ -57,5 +57,6 @@ public class Gen {
         }
         // 生成模版代码
         Generator.create(true, url, username, password, TABLES, PREFIX, MODULE, PARENT_PACKAGE);
+//        Generator.deleteGeneratedFiles(List.of("Depart"), MODULE, PARENT_PACKAGE);
     }
 }

@@ -71,7 +71,7 @@ public class CategoryController {
     @Operation(summary = "查询全部")
     @GetMapping("/all")
     public Result<List<Category>> listAll(String module) {
-        List<Category> list = categoryService.list(new LambdaQueryWrapper<Category>().eq(Category::getModule, module));
+        List<Category> list = categoryService.list(new LambdaQueryWrapper<Category>().eq(Category::getModule, module).orderByAsc(Category::getSort));
         return ResultUtils.success(TreeUtils.translate(list, Category::getId, Category::getParentId));
     }
 }

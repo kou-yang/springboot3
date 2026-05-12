@@ -36,6 +36,10 @@ public class CategorySaveDTO implements Serializable {
     @NotBlank
     private String name;
 
+    @Schema(description = "排序")
+    @NotNull
+    private Integer sort;
+
     @Schema(description = "备注")
     private String note;
 }

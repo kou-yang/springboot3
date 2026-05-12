@@ -95,6 +95,13 @@ public class UserController {
         return ResultUtils.success();
     }
 
+    @Operation(summary = "获取当前用户信息")
+    @GetMapping("/info")
+    public Result<UserDetailVO> getUserInfo() {
+        UserDetailVO info = userService.getUserInfo();
+        return ResultUtils.success(info);
+    }
+
     @Operation(summary = "获取当前用户权限")
     @GetMapping("/permissions")
     public Result<List<UserPermissionVO>> listUserPermissions(String type) {

@@ -134,9 +134,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public void logout() {
         String userId = UserHolder.getUserId();
-        RedisUtils.delete(RedisKey.getKey(RedisKey.ACCESS_TOKEN, userId));
-        RedisUtils.delete(RedisKey.getKey(RedisKey.REFRESH_TOKEN, userId));
-        RedisUtils.delete(RedisKey.getKey(RedisKey.USER_INFO, userId));
+        RedisUtils.delete(RedisKey.getKeyNoTenant(RedisKey.ACCESS_TOKEN, userId));
+        RedisUtils.delete(RedisKey.getKeyNoTenant(RedisKey.REFRESH_TOKEN, userId));
+        RedisUtils.delete(RedisKey.getKeyNoTenant(RedisKey.USER_INFO, userId));
     }
 
     @Override
@@ -176,6 +176,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             return vo;
         });
         return TreeUtils.translate(voList, UserPermissionVO::getId, UserPermissionVO::getParentId);
+    }
+
+    @Override
+    public UserDetailVO getUserInfo() {
+        User user = getById(UserHolder.getUserId());
+        return entity2DetailVO(user);
     }
 
     public List<UserPageVO> entityList2PageVOList(List<User> entityList) {
