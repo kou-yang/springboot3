@@ -14,6 +14,7 @@ import com.conggua.springboot3.server.constant.RedisKey;
 import com.conggua.springboot3.server.designpattern.strategy.login.LoginStrategy;
 import com.conggua.springboot3.server.designpattern.strategy.login.LoginStrategyContext;
 import com.conggua.springboot3.server.mapper.UserMapper;
+import com.conggua.springboot3.server.model.bo.UserInfo;
 import com.conggua.springboot3.server.model.dto.UserLoginDTO;
 import com.conggua.springboot3.server.model.dto.UserPageDTO;
 import com.conggua.springboot3.server.model.dto.UserSaveDTO;
@@ -29,12 +30,15 @@ import com.conggua.springboot3.server.service.PermissionService;
 import com.conggua.springboot3.server.service.RolePermissionService;
 import com.conggua.springboot3.server.service.UserRoleService;
 import com.conggua.springboot3.server.service.UserService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.DigestUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -59,6 +63,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public User save(UserSaveDTO dto) {
         User entity = new User();
         BeanUtils.copyProperties(dto, entity);
+        entity.setSalt(UUIDUtils.getUuid8());
+        entity.setPassword(DigestUtils.md5DigestAsHex((entity.getSalt() + entity.getPassword()).getBytes()));
         this.save(entity);
         return entity;
     }
@@ -107,36 +113,48 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public String renewal(String refreshToken) {
         DecodedJWT jwt = JwtUtils.verify(refreshToken, false);
-        assert jwt != null;
+        if (Objects.isNull(jwt)) {
+            throw new BusinessException(CommonErrorEnum.NOT_LOGIN_ERROR);
+        }
         Map<String, ?> map = JwtUtils.getMap(jwt);
         String userId = (String) map.get("userId");
-        if (StringUtils.isBlank(userId)) {
+        String deviceFingerprint = (String) map.get("deviceFingerprint");
+        if (StringUtils.isAnyBlank(userId, deviceFingerprint)) {
             throw new BusinessException(CommonErrorEnum.PARAMS_ERROR, "RefreshToken 错误");
         }
-        String latestRefreshToken = RedisUtils.get(RedisKey.getKeyNoTenant(RedisKey.REFRESH_TOKEN, userId), String.class);
+        String latestRefreshToken = RedisUtils.get(RedisKey.getKeyNoTenant(RedisKey.REFRESH_TOKEN, userId, deviceFingerprint), String.class);
         if (!Objects.equals(refreshToken, latestRefreshToken)) {
             throw new BusinessException(CommonErrorEnum.NOT_LOGIN_ERROR);
         }
-        String accessToken = RedisUtils.get(RedisKey.getKeyNoTenant(RedisKey.ACCESS_TOKEN, userId), String.class);
-        if (StringUtils.isNotBlank(accessToken)) {
-            return accessToken;
-        }
-        // 生成新的AccessToken
-        Map<String, String> m = Map.of("userId", userId);
-        accessToken = JwtUtils.generateToken(m, true);
-        // 存储redis
-        RedisUtils.set(RedisKey.getKeyNoTenant(RedisKey.ACCESS_TOKEN, userId), accessToken, LoginConstant.ACCESS_TOKEN_EXPIRE, TimeUnit.MINUTES);
-        // RefreshToken续期
-        RedisUtils.expire(RedisKey.getKeyNoTenant(RedisKey.REFRESH_TOKEN, userId), LoginConstant.REFRESH_TOKEN_EXPIRE, TimeUnit.DAYS);
+        // 生成新的 AccessToken
+        Map<String, String> m = Map.of("userId", userId, "deviceFingerprint", deviceFingerprint);
+        String accessToken = JwtUtils.generateToken(m, true);
+        refreshToken = JwtUtils.generateToken(m, false);
+        // 存储到 redis
+        RedisUtils.set(RedisKey.getKeyNoTenant(RedisKey.ACCESS_TOKEN, userId, deviceFingerprint), accessToken, LoginConstant.ACCESS_TOKEN_EXPIRE, TimeUnit.MINUTES);
+        RedisUtils.set(RedisKey.getKeyNoTenant(RedisKey.REFRESH_TOKEN, userId, deviceFingerprint), refreshToken, LoginConstant.REFRESH_TOKEN_EXPIRE, TimeUnit.DAYS);
+        RedisUtils.expire(RedisKey.getKeyNoTenant(RedisKey.USER_INFO, userId), LoginConstant.REFRESH_TOKEN_EXPIRE, TimeUnit.DAYS);
+
+        // 存储 RefreshToken 到 Cookie
+        Cookie refreshCookie = new Cookie("refreshToken", refreshToken);
+        refreshCookie.setHttpOnly(true);
+        refreshCookie.setSecure(true);
+        refreshCookie.setPath("/api/user/renewal");
+        refreshCookie.setMaxAge((int) (LoginConstant.REFRESH_TOKEN_EXPIRE * 24 * 3600));
+        HttpServletResponse response = SpringContextUtils.getHttpServletResponse();
+        response.addHeader("Set-Cookie",
+                String.format("refreshToken=%s; HttpOnly; Secure; SameSite=Strict; Path=/api/user/renewal; Max-Age=%d",
+                        refreshToken, LoginConstant.REFRESH_TOKEN_EXPIRE * 24 * 3600));
         return accessToken;
     }
 
     @Override
     public void logout() {
-        String userId = UserHolder.getUserId();
-        RedisUtils.delete(RedisKey.getKeyNoTenant(RedisKey.ACCESS_TOKEN, userId));
-        RedisUtils.delete(RedisKey.getKeyNoTenant(RedisKey.REFRESH_TOKEN, userId));
-        RedisUtils.delete(RedisKey.getKeyNoTenant(RedisKey.USER_INFO, userId));
+        UserInfo user = (UserInfo) UserHolder.get();
+        String userId = user.getId();
+        String deviceFingerprint = user.getDeviceFingerprint();
+        RedisUtils.delete(RedisKey.getKeyNoTenant(RedisKey.ACCESS_TOKEN, userId, deviceFingerprint));
+        RedisUtils.delete(RedisKey.getKeyNoTenant(RedisKey.REFRESH_TOKEN, userId, deviceFingerprint));
     }
 
     @Override

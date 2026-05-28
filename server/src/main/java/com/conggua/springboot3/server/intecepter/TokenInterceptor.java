@@ -4,7 +4,6 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.conggua.common.base.exception.CommonErrorEnum;
 import com.conggua.common.base.util.JwtUtils;
 import com.conggua.common.redis.util.RedisUtils;
-import com.conggua.springboot3.server.constant.LoginConstant;
 import com.conggua.springboot3.server.constant.RedisKey;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,7 +17,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author ky
@@ -46,13 +44,14 @@ public class TokenInterceptor implements HandlerInterceptor {
         }
         Map<String, ?> map = JwtUtils.getMap(jwt);
         String userId = (String) map.get("userId");
-        if (StringUtils.isAnyBlank(userId)) {
+        String deviceFingerprint = (String) map.get("deviceFingerprint");
+        if (StringUtils.isAnyBlank(userId, deviceFingerprint)) {
             CommonErrorEnum.NOT_LOGIN_ERROR.sendHttpError();
             return false;
         }
         // 查询 AccessToken 和 RefreshToken
-        String accessKey = RedisKey.getKeyNoTenant(RedisKey.ACCESS_TOKEN, userId);
-        String refreshKey = RedisKey.getKeyNoTenant(RedisKey.REFRESH_TOKEN, userId);
+        String accessKey = RedisKey.getKeyNoTenant(RedisKey.ACCESS_TOKEN, userId, deviceFingerprint);
+        String refreshKey = RedisKey.getKeyNoTenant(RedisKey.REFRESH_TOKEN, userId, deviceFingerprint);
         String latestAccessToken = RedisUtils.get(accessKey, String.class);
         String refreshToken = RedisUtils.get(refreshKey, String.class);
         if (StringUtils.isBlank(refreshToken)) {
@@ -72,11 +71,7 @@ public class TokenInterceptor implements HandlerInterceptor {
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        // RefreshToken 续期
-        String userId = (String) request.getAttribute("userId");
-        String tenantId = (String) request.getAttribute("tenantId");
-        String refreshKey = RedisKey.getKeyNoTenant(RedisKey.REFRESH_TOKEN, tenantId, userId);
-        RedisUtils.expire(refreshKey, LoginConstant.REFRESH_TOKEN_EXPIRE, TimeUnit.DAYS);
+
     }
 
     private String getToken(HttpServletRequest request) {

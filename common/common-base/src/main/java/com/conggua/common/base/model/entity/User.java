@@ -12,5 +12,7 @@ public class User {
 
     private String id;
 
+    private String deviceFingerprint;
+
     private String userName;
 }

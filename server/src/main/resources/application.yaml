@@ -2,8 +2,8 @@ spring:
   application:
     name: springboot3
   profiles:
-    active: dev
+    active: test
 server:
-  port: 8999
+  port: 9999
   servlet:
     context-path: /api

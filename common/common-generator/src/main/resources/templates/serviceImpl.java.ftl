@@ -9,7 +9,7 @@ import ${package.Parent}.model.dto.${entity}PageDTO;
 import ${package.Parent}.model.dto.im.${entity}ImportDTO;
 import ${package.Parent}.model.vo.${entity}PageVO;
 import ${package.Parent}.model.vo.${entity}DetailVO;
-import ${package.Parent}.listener.${entity}ImportListener;
+import ${package.Parent}.listener.im.${entity}ImportListener;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;

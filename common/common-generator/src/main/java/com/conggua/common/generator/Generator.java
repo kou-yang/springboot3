@@ -97,7 +97,7 @@ public class Generator {
                 customMap.put("pageDTOPackage", parentPackage + ".model.dto");
                 customMap.put("voPackage", parentPackage + ".model.vo");
                 customMap.put("importDTOPackage", parentPackage + ".model.dto.im");
-                customMap.put("importListenerPackage", parentPackage + ".listener");
+                customMap.put("importListenerPackage", parentPackage + ".listener.im");
                 builder.customMap(customMap);
 
                 // 覆盖模式

@@ -17,12 +17,12 @@ public interface RedisKey {
     /**
      * 用户AccessToken
      */
-    String ACCESS_TOKEN = "accessToken:userId_%s";
+    String ACCESS_TOKEN = "accessToken:userId_%s:%s";
 
     /**
      * 用户RefreshToken
      */
-    String REFRESH_TOKEN = "refreshToken:userId_%s";
+    String REFRESH_TOKEN = "refreshToken:userId_%s:%s";
 
     /**
      * 用户信息

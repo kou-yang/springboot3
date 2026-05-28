@@ -5,7 +5,10 @@ import com.conggua.common.base.common.ResultUtils;
 import com.conggua.common.base.common.UserHolder;
 import com.conggua.common.web.model.request.PrimaryKeyDTO;
 import com.conggua.common.web.model.response.CommonPage;
-import com.conggua.springboot3.server.model.dto.*;
+import com.conggua.springboot3.server.model.dto.UserLoginDTO;
+import com.conggua.springboot3.server.model.dto.UserPageDTO;
+import com.conggua.springboot3.server.model.dto.UserSaveDTO;
+import com.conggua.springboot3.server.model.dto.UserUpdateDTO;
 import com.conggua.springboot3.server.model.entity.User;
 import com.conggua.springboot3.server.model.vo.UserDetailVO;
 import com.conggua.springboot3.server.model.vo.UserPageVO;
@@ -83,8 +86,8 @@ public class UserController {
 
     @Operation(summary = "token续期")
     @PostMapping("/renewal")
-    public Result<?> renewal(@Validated @RequestBody TokenRenewalDTO dto) {
-        String accessToken = userService.renewal(dto.getRefreshToken());
+    public Result<?> renewal(@CookieValue("refreshToken") String refreshToken) {
+        String accessToken = userService.renewal(refreshToken);
         return ResultUtils.success(accessToken);
     }
 
