@@ -6,8 +6,8 @@ import com.conggua.springboot3.server.model.dto.UserLoginDTO;
 import com.conggua.springboot3.server.model.entity.User;
 import com.conggua.springboot3.server.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import org.springframework.util.DigestUtils;
 
 import java.util.Map;
 import java.util.Objects;
@@ -22,6 +22,8 @@ public class AccountPasswrodLoginStrategy implements LoginStrategy {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public Map<String, String> execute(UserLoginDTO dto) {
@@ -42,8 +44,8 @@ public class AccountPasswrodLoginStrategy implements LoginStrategy {
         if (Objects.isNull(user)) {
             throw new BusinessException(CommonErrorEnum.ACCOUNT_ERROR);
         }
-        password = DigestUtils.md5DigestAsHex((user.getSalt() + password).getBytes());
-        if (!Objects.equals(user.getPassword(), password)) {
+        boolean matches = passwordEncoder.matches(password, user.getPassword());
+        if (!matches) {
             throw new BusinessException(CommonErrorEnum.PASSWORD_ERROR);
         }
     }

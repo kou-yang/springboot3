@@ -2,11 +2,13 @@ package com.conggua.springboot3.server.datascope;
 
 import com.conggua.common.base.common.UserHolder;
 import com.conggua.common.base.util.CollStreamUtils;
+import com.conggua.common.web.constant.DataScopeEnum;
 import com.conggua.common.web.provider.DataScopeProvider;
 import com.conggua.springboot3.server.constant.PermissionTypeEnum;
 import com.conggua.springboot3.server.model.vo.UserPermissionVO;
 import com.conggua.springboot3.server.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -25,6 +27,9 @@ public class CustomDataScopeProvider implements DataScopeProvider {
     @Override
     public List<String> getPermissions() {
         List<UserPermissionVO> dataScopeList = userService.listUserPermissions(UserHolder.getUserId(), PermissionTypeEnum.DATA_SCOPE.getType());
+        if (CollectionUtils.isEmpty(dataScopeList)) {
+            return List.of(DataScopeEnum.SELF.getCode());
+        }
         return CollStreamUtils.toDistinctList(dataScopeList, UserPermissionVO::getCode);
     }
 }

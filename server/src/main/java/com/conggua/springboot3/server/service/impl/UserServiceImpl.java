@@ -37,8 +37,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.DigestUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -58,14 +58,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private final UserRoleService userRoleService;
     private final RolePermissionService rolePermissionService;
     private final PermissionService permissionService;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public User save(UserSaveDTO dto) {
         User entity = new User();
         BeanUtils.copyProperties(dto, entity);
-        entity.setSalt(UUIDUtils.getUuid8());
-        entity.setPassword(DigestUtils.md5DigestAsHex((entity.getSalt() + entity.getPassword()).getBytes()));
+        passwordEncoder.encode(entity.getPassword());
+        entity.setPassword(passwordEncoder.encode(entity.getPassword()));
         this.save(entity);
+
+        entity.setPassword(null);
         return entity;
     }
 
