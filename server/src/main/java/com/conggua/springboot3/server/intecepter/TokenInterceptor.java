@@ -43,8 +43,8 @@ public class TokenInterceptor implements HandlerInterceptor {
             return false;
         }
         Map<String, ?> map = JwtUtils.getMap(jwt);
-        String userId = (String) map.get("userId");
-        String deviceFingerprint = (String) map.get("deviceFingerprint");
+        String userId = Optional.ofNullable(map.get("userId")).map(Object::toString).orElse("");
+        String deviceFingerprint = Optional.ofNullable(map.get("deviceFingerprint")).map(Object::toString).orElse("");
         if (StringUtils.isAnyBlank(userId, deviceFingerprint)) {
             CommonErrorEnum.NOT_LOGIN_ERROR.sendHttpError();
             return false;

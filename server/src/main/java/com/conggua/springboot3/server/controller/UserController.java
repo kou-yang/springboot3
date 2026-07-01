@@ -86,9 +86,9 @@ public class UserController {
 
     @Operation(summary = "token续期")
     @PostMapping("/renewal")
-    public Result<?> renewal(@CookieValue("refreshToken") String refreshToken) {
-        String accessToken = userService.renewal(refreshToken);
-        return ResultUtils.success(accessToken);
+    public Result<?> renewal(String refreshToken) {
+        Map<String, String> tokenPair = userService.renewal(refreshToken);
+        return ResultUtils.success(tokenPair);
     }
 
     @Operation(summary = "登出")

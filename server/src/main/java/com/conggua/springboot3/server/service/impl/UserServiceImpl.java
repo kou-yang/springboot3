@@ -30,8 +30,6 @@ import com.conggua.springboot3.server.service.PermissionService;
 import com.conggua.springboot3.server.service.RolePermissionService;
 import com.conggua.springboot3.server.service.UserRoleService;
 import com.conggua.springboot3.server.service.UserService;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -114,7 +112,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public String renewal(String refreshToken) {
+    public Map<String, String> renewal(String refreshToken) {
         DecodedJWT jwt = JwtUtils.verify(refreshToken, false);
         if (Objects.isNull(jwt)) {
             throw new BusinessException(CommonErrorEnum.NOT_LOGIN_ERROR);
@@ -138,17 +136,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         RedisUtils.set(RedisKey.getKeyNoTenant(RedisKey.REFRESH_TOKEN, userId, deviceFingerprint), refreshToken, LoginConstant.REFRESH_TOKEN_EXPIRE, TimeUnit.DAYS);
         RedisUtils.expire(RedisKey.getKeyNoTenant(RedisKey.USER_INFO, userId), LoginConstant.REFRESH_TOKEN_EXPIRE, TimeUnit.DAYS);
 
-        // 存储 RefreshToken 到 Cookie
-        Cookie refreshCookie = new Cookie("refreshToken", refreshToken);
-        refreshCookie.setHttpOnly(true);
-        refreshCookie.setSecure(true);
-        refreshCookie.setPath("/api/user/renewal");
-        refreshCookie.setMaxAge((int) (LoginConstant.REFRESH_TOKEN_EXPIRE * 24 * 3600));
-        HttpServletResponse response = SpringContextUtils.getHttpServletResponse();
-        response.addHeader("Set-Cookie",
-                String.format("refreshToken=%s; HttpOnly; Secure; SameSite=Strict; Path=/api/user/renewal; Max-Age=%d",
-                        refreshToken, LoginConstant.REFRESH_TOKEN_EXPIRE * 24 * 3600));
-        return accessToken;
+        return Map.of("accessToken", accessToken, "refreshToken", refreshToken);
     }
 
     @Override

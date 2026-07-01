@@ -65,7 +65,7 @@ public interface UserService extends BaseService<User> {
      * @param refreshToken
      * @return
      */
-    String renewal(@NotBlank String refreshToken);
+    Map<String, String> renewal(@NotBlank String refreshToken);
 
     /**
      * 登出

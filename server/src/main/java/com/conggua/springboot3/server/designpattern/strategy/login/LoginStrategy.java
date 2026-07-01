@@ -53,7 +53,14 @@ public interface LoginStrategy {
         userInfo.setDeviceFingerprint(deviceFingerprint);
         RedisUtils.set(RedisKey.getKeyNoTenant(RedisKey.USER_INFO, userId), userInfo, LoginConstant.REFRESH_TOKEN_EXPIRE, TimeUnit.DAYS);
 
-        // 存储 RefreshToken 到 Cookie
+        return Map.of("accessToken", accessToken, "refreshToken", refreshToken);
+    }
+
+    /**
+     * 存储 RefreshToken 到 Cookie
+     * @param refreshToken
+     */
+    default void setRTCookie(String refreshToken) {
         Cookie refreshCookie = new Cookie("refreshToken", refreshToken);
         refreshCookie.setHttpOnly(true);
         refreshCookie.setSecure(true);
@@ -63,7 +70,5 @@ public interface LoginStrategy {
         response.addHeader("Set-Cookie",
                 String.format("refreshToken=%s; HttpOnly; Secure; SameSite=Strict; Path=/api/user/renewal; Max-Age=%d",
                         refreshToken, LoginConstant.REFRESH_TOKEN_EXPIRE * 24 * 3600));
-
-        return Map.of("accessToken", accessToken);
     }
 }
