@@ -39,7 +39,7 @@ public class Gen {
      * 需要生成的表(默认不覆盖)
      */
     private static final List<String> TABLES = List.of(
-            "sys_depart"
+            "sys_log"
     );
 
     public static void main(String[] args) {
@@ -56,7 +56,7 @@ public class Gen {
             throw new BusinessException(CommonErrorEnum.NOT_FOUND_ERROR, "缺少数据库配置");
         }
         // 生成模版代码
-//        Generator.create(true, url, username, password, TABLES, PREFIX, MODULE, PARENT_PACKAGE);
-        Generator.deleteGeneratedFiles(List.of("Depart"), MODULE, PARENT_PACKAGE);
+        Generator.create(true, url, username, password, TABLES, PREFIX, MODULE, PARENT_PACKAGE);
+//        Generator.deleteGeneratedFiles(List.of("Depart"), MODULE, PARENT_PACKAGE);
     }
 }

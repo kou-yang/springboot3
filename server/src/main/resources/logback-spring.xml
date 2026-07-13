@@ -32,6 +32,13 @@
         </encoder>
     </appender>
 
+    <!-- 日志入库 Appender -->
+    <appender name="DB_LOG" class="com.conggua.springboot3.server.log.DbLogAppender"/>
+    <!-- 指定需要入库的包 -->
+    <logger name="com.conggua" level="INFO" additivity="true">
+        <appender-ref ref="DB_LOG"/>
+    </logger>
+
     <!-- 控制台输出设置 -->
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
