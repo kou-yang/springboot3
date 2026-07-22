@@ -41,10 +41,6 @@ public class User implements Serializable {
     @TableField("password")
     private String password;
 
-    @Schema(description = "盐")
-    @TableField("salt")
-    private String salt;
-
     @Schema(description = "用户名")
     @TableField("user_name")
     private String userName;
@@ -55,7 +51,7 @@ public class User implements Serializable {
 
     @Schema(description = "性别")
     @TableField("gender")
-    private Byte gender;
+    private Boolean gender;
 
     @Schema(description = "头像")
     @TableField("avatar")

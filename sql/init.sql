@@ -12,8 +12,7 @@ create table sys_category
     update_time datetime                null comment '更新时间',
     constraint sys_category_pk
         unique (module, name, parent_id)
-)
-    comment '通用分类' row_format = COMPACT;
+) comment '通用分类' row_format = COMPACT;
 
 create table sys_permission
 (
@@ -34,8 +33,7 @@ create table sys_permission
     update_time datetime    default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
     constraint sys_permission_pk
         unique (code, type)
-)
-    comment '权限' charset = utf8mb4;
+) comment '权限' charset = utf8mb4;
 
 create table sys_role
 (
@@ -48,8 +46,7 @@ create table sys_role
     update_time timestamp default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP comment '更新时间',
     constraint sys_role_pk
         unique (code)
-)
-    comment '角色';
+) comment '角色';
 
 create table sys_role_permission
 (
@@ -61,8 +58,7 @@ create table sys_role_permission
     create_time   timestamp                  default CURRENT_TIMESTAMP null comment '创建时间',
     constraint sys_role_permission_pk
         unique (role_id, permission_id)
-)
-    comment '角色权限';
+) comment '角色权限';
 
 create index sys_role_permission_permission_id_index
     on sys_role_permission (permission_id);
@@ -73,17 +69,15 @@ create table sys_user
         primary key,
     account     varchar(64)            null comment '账号',
     password    varchar(64)            null comment '密码',
-    salt        varchar(20)            null comment '盐',
     user_name   varchar(20)            null comment '用户名',
     phone       varchar(20)            null comment '手机号',
-    gender      tinyint                null comment '性别',
+    gender      tinyint(1)             null comment '性别',
     avatar      text                   null comment '头像',
     create_time datetime               null comment '创建时间',
     update_time datetime               null comment '更新时间',
     constraint sys_user_account_uindex
         unique (account)
-)
-    comment '用户';
+) comment '用户';
 
 create table sys_user_role
 (
@@ -94,8 +88,23 @@ create table sys_user_role
     create_time timestamp default CURRENT_TIMESTAMP null comment '创建时间',
     constraint sys_user_role_pk
         unique (user_id, role_id)
-)
-    comment '用户角色';
+) comment '用户角色';
 
 create index sys_user_role_role_id_index
     on sys_user_role (role_id);
+
+create table sys_log
+(
+    id       varchar(64) not null comment 'id'
+        primary key,
+    trace_id varchar(64) null comment 'trace_id',
+    level    varchar(10) null comment '日志级别',
+    time     datetime    null comment '时间',
+    content  text        null comment '日志内容'
+) comment '日志' row_format = COMPACT;
+
+create index sys_log_time_index
+    on sys_log (time);
+
+create index sys_log_trace_id_index
+    on sys_log (trace_id);

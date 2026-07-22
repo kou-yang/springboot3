@@ -1,9 +1,7 @@
 package com.conggua.springboot3.server.model.dto;
 
-import com.conggua.common.web.model.request.CommonPageDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
@@ -14,8 +12,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
-public class LogPageDTO extends CommonPageDTO {
+public class LogCursorPageDTO {
 
     @Schema(description = "链路id")
     private String traceId;
@@ -28,4 +25,7 @@ public class LogPageDTO extends CommonPageDTO {
 
     @Schema(description = "日志内容")
     private String content;
+
+    @Schema(description = "游标")
+    private String cursor;
 }

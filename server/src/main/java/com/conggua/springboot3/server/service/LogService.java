@@ -2,10 +2,12 @@ package com.conggua.springboot3.server.service;
 
 import com.conggua.common.web.model.response.CommonPage;
 import com.conggua.common.web.service.BaseService;
+import com.conggua.springboot3.server.model.dto.LogCursorPageDTO;
 import com.conggua.springboot3.server.model.dto.LogPageDTO;
 import com.conggua.springboot3.server.model.dto.LogSaveDTO;
 import com.conggua.springboot3.server.model.dto.LogUpdateDTO;
 import com.conggua.springboot3.server.model.entity.Log;
+import com.conggua.springboot3.server.model.vo.LogCursorVO;
 import com.conggua.springboot3.server.model.vo.LogDetailVO;
 import com.conggua.springboot3.server.model.vo.LogPageVO;
 import org.springframework.core.io.Resource;
@@ -42,6 +44,13 @@ public interface LogService extends BaseService<Log> {
      * @return
      */
     CommonPage<LogPageVO> page(LogPageDTO dto);
+
+    /**
+     * 游标分页查询
+     * @param dto
+     * @return
+     */
+    LogCursorVO pageByCursor(LogCursorPageDTO dto);
 
     /**
      * 根据id查询详情

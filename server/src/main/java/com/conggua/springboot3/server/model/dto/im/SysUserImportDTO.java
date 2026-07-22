@@ -32,7 +32,7 @@ public class SysUserImportDTO {
     private String phone;
 
     @ExcelProperty(value = "性别")
-    private Byte gender;
+    private Boolean gender;
 
     @ExcelProperty(value = "头像")
     private String avatar;

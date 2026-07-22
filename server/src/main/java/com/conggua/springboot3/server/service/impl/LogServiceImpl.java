@@ -8,11 +8,13 @@ import com.conggua.common.base.util.CollStreamUtils;
 import com.conggua.common.web.model.response.CommonPage;
 import com.conggua.springboot3.server.listener.im.LogImportListener;
 import com.conggua.springboot3.server.mapper.LogMapper;
+import com.conggua.springboot3.server.model.dto.LogCursorPageDTO;
 import com.conggua.springboot3.server.model.dto.LogPageDTO;
 import com.conggua.springboot3.server.model.dto.LogSaveDTO;
 import com.conggua.springboot3.server.model.dto.LogUpdateDTO;
 import com.conggua.springboot3.server.model.dto.im.LogImportDTO;
 import com.conggua.springboot3.server.model.entity.Log;
+import com.conggua.springboot3.server.model.vo.LogCursorVO;
 import com.conggua.springboot3.server.model.vo.LogDetailVO;
 import com.conggua.springboot3.server.model.vo.LogPageVO;
 import com.conggua.springboot3.server.service.LogService;
@@ -20,6 +22,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.fesod.sheet.FesodSheet;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.io.InputStreamResource;
@@ -45,6 +49,8 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class LogServiceImpl extends ServiceImpl<LogMapper, Log> implements LogService {
+
+    private static final Integer PAGE_SIZE = 20;
 
     @Override
     public Log save(LogSaveDTO dto) {
@@ -72,10 +78,40 @@ public class LogServiceImpl extends ServiceImpl<LogMapper, Log> implements LogSe
     public CommonPage<LogPageVO> page(LogPageDTO dto) {
         Page<Log> page = dto.startMpPage(Log.class);
         LambdaQueryChainWrapper<Log> wrapper = lambdaQuery();
+        wrapper.eq(StringUtils.isNotBlank(dto.getTraceId()), Log::getTraceId, dto.getTraceId());
+        wrapper.between(ObjectUtils.allNotNull(dto.getStartTime(), dto.getEndTime()), Log::getTime, dto.getStartTime(), dto.getEndTime());
+        wrapper.like(StringUtils.isNotBlank(dto.getContent()), Log::getContent, dto.getContent());
         page = wrapper.page(page);
         // entity转vo
         List<LogPageVO> voList = this.entityList2PageVOList(page.getRecords());
         return CommonPage.restPage(voList, page.getTotal());
+    }
+
+    @Override
+    public LogCursorVO pageByCursor(LogCursorPageDTO dto) {
+        LambdaQueryChainWrapper<Log> wrapper = lambdaQuery();
+        wrapper.eq(StringUtils.isNotBlank(dto.getTraceId()), Log::getTraceId, dto.getTraceId());
+        wrapper.between(ObjectUtils.allNotNull(dto.getStartTime(), dto.getEndTime()), Log::getTime, dto.getStartTime(), dto.getEndTime());
+        wrapper.like(StringUtils.isNotBlank(dto.getContent()), Log::getContent, dto.getContent());
+        wrapper.lt(StringUtils.isNotBlank(dto.getCursor()), Log::getId, dto.getCursor());
+        wrapper.orderByDesc(Log::getId);
+        wrapper.last("LIMIT " + (PAGE_SIZE + 1));
+        List<Log> logList = wrapper.list();
+
+        String nextCursor = null;
+        boolean hasMore = logList.size() > PAGE_SIZE;
+        if (hasMore) {
+            logList = logList.subList(0, PAGE_SIZE);
+            nextCursor = logList.get(logList.size() - 1).getId();
+        }
+
+        List<LogPageVO> voList = this.entityList2PageVOList(logList);
+
+        LogCursorVO cursorVO = new LogCursorVO();
+        cursorVO.setLogs(voList);
+        cursorVO.setNextCursor(nextCursor);
+        cursorVO.setHasMore(hasMore);
+        return cursorVO;
     }
 
     @Override

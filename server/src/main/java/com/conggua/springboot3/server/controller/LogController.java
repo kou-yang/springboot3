@@ -5,7 +5,9 @@ import com.conggua.common.base.common.ResultUtils;
 import com.conggua.common.web.model.request.PrimaryKeyDTO;
 import com.conggua.common.web.model.request.PrimaryKeysDTO;
 import com.conggua.common.web.model.response.CommonPage;
+import com.conggua.springboot3.server.model.dto.LogCursorPageDTO;
 import com.conggua.springboot3.server.model.dto.LogPageDTO;
+import com.conggua.springboot3.server.model.vo.LogCursorVO;
 import com.conggua.springboot3.server.model.vo.LogPageVO;
 import com.conggua.springboot3.server.service.LogService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author kouyang
  * @since 2026-07-10
  */
-@Tag(name = "日志管理")
+@Tag(name = "sys-日志管理")
 @RestController
 @RequestMapping("/log")
 @RequiredArgsConstructor
@@ -48,5 +50,12 @@ public class LogController {
     public Result<CommonPage<LogPageVO>> page(@Validated @RequestBody LogPageDTO dto) {
         CommonPage<LogPageVO> page = logService.page(dto);
         return ResultUtils.success(page);
+    }
+
+    @Operation(summary = "游标分页查询")
+    @PostMapping("/page/cursor")
+    public Result<LogCursorVO> pageByCursor(@Validated @RequestBody LogCursorPageDTO dto) {
+        LogCursorVO cursorVO = logService.pageByCursor(dto);
+        return ResultUtils.success(cursorVO);
     }
 }

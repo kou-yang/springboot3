@@ -30,7 +30,7 @@ public class UserPageVO implements Serializable {
     private String phone;
 
     @Schema(description = "性别")
-    private Byte gender;
+    private Boolean gender;
 
     @Schema(description = "头像")
     private String avatar;
