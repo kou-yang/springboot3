@@ -32,7 +32,7 @@ public class LogPersistListener {
     public void onLogEvent(LogPersistEvent event) {
         ILoggingEvent logEvent = event.getLoggingEvent();
         Log Log = new Log();
-        String traceId = logEvent.getMDCPropertyMap().get("traceId");
+        String traceId = event.getTraceId();
         Log.setTraceId(traceId);
         Log.setLevel(logEvent.getLevel().toString());
         Log.setTime(LocalDateTime.ofInstant(Instant.ofEpochMilli(logEvent.getTimeStamp()), ZoneId.systemDefault()));

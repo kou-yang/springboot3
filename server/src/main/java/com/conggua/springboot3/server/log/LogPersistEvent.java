@@ -13,9 +13,11 @@ import org.springframework.context.ApplicationEvent;
 public class LogPersistEvent extends ApplicationEvent {
 
     private final ILoggingEvent loggingEvent;
+    private final String traceId;
 
-    public LogPersistEvent(Object source, ILoggingEvent loggingEvent) {
+    public LogPersistEvent(Object source, ILoggingEvent loggingEvent, String traceId) {
         super(source);
         this.loggingEvent = loggingEvent;
+        this.traceId = traceId;
     }
 }

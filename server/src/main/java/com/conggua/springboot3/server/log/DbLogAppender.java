@@ -3,6 +3,7 @@ package com.conggua.springboot3.server.log;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.AppenderBase;
 import com.conggua.common.base.util.SpringContextUtils;
+import org.slf4j.MDC;
 
 /**
  * @author: kouyang
@@ -17,6 +18,7 @@ public class DbLogAppender extends AppenderBase<ILoggingEvent> {
         if (SpringContextUtils.getApplicationContext() == null) {
             return;
         }
-        SpringContextUtils.getApplicationContext().publishEvent(new LogPersistEvent(this, event));
+        String traceId = MDC.get("traceId");
+        SpringContextUtils.getApplicationContext().publishEvent(new LogPersistEvent(this, event, traceId));
     }
 }

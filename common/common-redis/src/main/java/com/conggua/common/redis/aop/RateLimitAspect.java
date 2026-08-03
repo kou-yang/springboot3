@@ -33,7 +33,7 @@ import java.util.UUID;
  */
 @Slf4j
 @Aspect
-@Order(Integer.MIN_VALUE)
+@Order(-100)
 @Component
 public class RateLimitAspect {
 
@@ -90,6 +90,7 @@ public class RateLimitAspect {
                 break;
             case UID:
                 key = prefix + UserHolder.getUserId();
+                break;
             default:
                 break;
         }
