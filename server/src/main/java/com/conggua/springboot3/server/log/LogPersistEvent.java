@@ -14,10 +14,12 @@ public class LogPersistEvent extends ApplicationEvent {
 
     private final ILoggingEvent loggingEvent;
     private final String traceId;
+    private final String userId;
 
-    public LogPersistEvent(Object source, ILoggingEvent loggingEvent, String traceId) {
+    public LogPersistEvent(Object source, ILoggingEvent loggingEvent, String traceId, String userId) {
         super(source);
         this.loggingEvent = loggingEvent;
         this.traceId = traceId;
+        this.userId = userId;
     }
 }

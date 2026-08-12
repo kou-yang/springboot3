@@ -93,18 +93,20 @@ create table sys_user_role
 create index sys_user_role_role_id_index
     on sys_user_role (role_id);
 
-create table sys_log
+create table rbac.sys_log
 (
     id       varchar(64) not null comment 'id'
         primary key,
     trace_id varchar(64) null comment 'trace_id',
     level    varchar(10) null comment '日志级别',
     time     datetime    null comment '时间',
-    content  text        null comment '日志内容'
-) comment '日志' row_format = COMPACT;
+    content  text        null comment '日志内容',
+    user_id  varchar(64) null comment '操作用户id'
+)
+    comment '日志' row_format = COMPACT;
 
 create index sys_log_time_index
-    on sys_log (time);
+    on rbac.sys_log (time);
 
 create index sys_log_trace_id_index
-    on sys_log (trace_id);
+    on rbac.sys_log (trace_id);

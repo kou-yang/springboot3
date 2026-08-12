@@ -47,4 +47,8 @@ public class Log implements Serializable {
     @Schema(description = "日志内容")
     @TableField("content")
     private String content;
+
+    @Schema(description = "操作用户id")
+    @TableField("user_id")
+    private String userId;
 }
