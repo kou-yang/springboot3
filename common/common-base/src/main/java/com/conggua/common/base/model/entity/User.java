@@ -15,4 +15,9 @@ public class User {
     private String deviceFingerprint;
 
     private String userName;
+
+    /**
+     * 用户类型：0-后台，1-移动端
+     */
+    private Integer type;
 }

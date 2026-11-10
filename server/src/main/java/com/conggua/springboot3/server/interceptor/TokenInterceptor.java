@@ -1,4 +1,4 @@
-package com.conggua.springboot3.server.intecepter;
+package com.conggua.springboot3.server.interceptor;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.conggua.common.base.exception.CommonErrorEnum;
@@ -9,7 +9,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -23,7 +22,6 @@ import java.util.Optional;
  * @description 登录校验
  * @date 2024-05-15 11:48
  */
-@Order(0)
 @Slf4j
 @Component
 public class TokenInterceptor implements HandlerInterceptor {

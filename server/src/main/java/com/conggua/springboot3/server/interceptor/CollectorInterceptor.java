@@ -1,4 +1,4 @@
-package com.conggua.springboot3.server.intecepter;
+package com.conggua.springboot3.server.interceptor;
 
 import com.conggua.common.base.common.UserHolder;
 import com.conggua.common.base.exception.CommonErrorEnum;
@@ -8,7 +8,6 @@ import com.conggua.springboot3.server.constant.RedisKey;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -22,7 +21,6 @@ import java.util.Optional;
  * @description 信息收集
  * @date 2024-05-15 11:57
  */
-@Order(2)
 @Slf4j
 @Component
 public class CollectorInterceptor implements HandlerInterceptor {

@@ -1,4 +1,4 @@
-package com.conggua.springboot3.server.controller;
+package com.conggua.springboot3.server.controller.admin;
 
 import com.conggua.common.base.common.Result;
 import com.conggua.common.base.common.ResultUtils;
@@ -24,9 +24,9 @@ import java.util.List;
  * @author kouyang
  * @since 2026-01-09
  */
-@Tag(name = "sys-角色管理")
+@Tag(name = "[后台] sys-角色管理")
 @RestController
-@RequestMapping("/role")
+@RequestMapping("/admin/role")
 @RequiredArgsConstructor
 public class RoleController {
 

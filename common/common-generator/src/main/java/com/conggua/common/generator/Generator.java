@@ -54,6 +54,8 @@ public class Generator {
                 // 设置父包名(com.xxx.xxx)
                 builder.parent(parentPackage)
                     .entity("model.entity")
+                    // controller生成到admin子包下(controller.admin)
+                    .controller("controller.admin")
                     // 设置mapperXml生成路径
                     .pathInfo(Collections.singletonMap(
                         OutputFile.xml,
@@ -169,7 +171,7 @@ public class Generator {
         String mapperPackagePath = (parentPackage + ".mapper").replace(".", "/");
         String servicePackagePath = (parentPackage + ".service").replace(".", "/");
         String serviceImplPackagePath = (parentPackage + ".service.impl").replace(".", "/");
-        String controllerPackagePath = (parentPackage + ".controller").replace(".", "/");
+        String controllerPackagePath = (parentPackage + ".controller.admin").replace(".", "/");
 
         classNames.forEach(className -> {
             // 1. Entity
@@ -225,7 +227,7 @@ public class Generator {
         String mapperPackagePath = (parentPackage + ".mapper").replace(".", "/");
         String servicePackagePath = (parentPackage + ".service").replace(".", "/");
         String serviceImplPackagePath = (parentPackage + ".service.impl").replace(".", "/");
-        String controllerPackagePath = (parentPackage + ".controller").replace(".", "/");
+        String controllerPackagePath = (parentPackage + ".controller.admin").replace(".", "/");
 
         String className = tableInfo.getEntityName();
 

@@ -18,7 +18,7 @@ import java.util.Objects;
  * @date 2024-08-23 14:44
  */
 @Component("accountPassword")
-public class AccountPasswrodLoginStrategy implements LoginStrategy {
+public class AccountPasswordLoginStrategy implements LoginStrategy {
 
     @Autowired
     private UserService userService;

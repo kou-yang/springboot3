@@ -10,6 +10,7 @@ create table sys_category
     create_time datetime                null comment '创建时间',
     update_by   varchar(64)             null comment '更新人',
     update_time datetime                null comment '更新时间',
+    deleted     datetime                null comment '逻辑删除',
     constraint sys_category_pk
         unique (module, name, parent_id)
 ) comment '通用分类' row_format = COMPACT;
@@ -31,6 +32,7 @@ create table sys_permission
     remark      varchar(50)                           null comment '备注',
     create_time datetime    default CURRENT_TIMESTAMP not null comment '创建时间',
     update_time datetime    default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
+    deleted     datetime                              null comment '逻辑删除',
     constraint sys_permission_pk
         unique (code, type)
 ) comment '权限' charset = utf8mb4;
@@ -44,6 +46,7 @@ create table sys_role
     remark      varchar(50)                         null comment '备注',
     create_time timestamp default CURRENT_TIMESTAMP null comment '创建时间',
     update_time timestamp default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP comment '更新时间',
+    deleted     datetime                          null comment '逻辑删除',
     constraint sys_role_pk
         unique (code)
 ) comment '角色';
@@ -73,8 +76,10 @@ create table sys_user
     phone       varchar(20)            null comment '手机号',
     gender      tinyint(1)             null comment '性别',
     avatar      text                   null comment '头像',
+    type        tinyint    default 0   null comment '用户类型：0-后台，1-移动端',
     create_time datetime               null comment '创建时间',
     update_time datetime               null comment '更新时间',
+    deleted     datetime               null comment '逻辑删除',
     constraint sys_user_account_uindex
         unique (account)
 ) comment '用户';

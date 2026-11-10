@@ -1,4 +1,4 @@
-package com.conggua.springboot3.server.controller;
+package com.conggua.springboot3.server.controller.admin;
 
 import com.conggua.common.base.common.Result;
 import com.conggua.common.base.common.ResultUtils;
@@ -27,9 +27,9 @@ import java.util.Map;
  * @author kouyang
  * @since 2026-02-02
  */
-@Tag(name = "sys-用户管理")
+@Tag(name = "[后台] sys-用户管理")
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/admin/user")
 @RequiredArgsConstructor
 public class UserController {
 

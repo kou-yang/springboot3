@@ -1,10 +1,8 @@
 package com.conggua.springboot3.server.designpattern.strategy.login;
 
 import com.conggua.springboot3.server.constant.LoginMethodEnum;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -15,8 +13,11 @@ import java.util.Map;
 @Configuration
 public class LoginStrategyContext {
 
-    @Autowired
-    private final Map<String, LoginStrategy> strategyMap = new HashMap<>();
+    private final Map<String, LoginStrategy> strategyMap;
+
+    public LoginStrategyContext(Map<String, LoginStrategy> strategyMap) {
+        this.strategyMap = strategyMap;
+    }
 
     public LoginStrategy getStrategy(Integer type) {
         return strategyMap.get(LoginMethodEnum.getValueByType(type));

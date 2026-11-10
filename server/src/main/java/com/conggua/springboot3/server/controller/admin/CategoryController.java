@@ -1,4 +1,4 @@
-package com.conggua.springboot3.server.controller;
+package com.conggua.springboot3.server.controller.admin;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.conggua.common.base.common.Result;
@@ -25,9 +25,9 @@ import java.util.List;
  * @author kouyang
  * @since 2026-02-05
  */
-@Tag(name = "sys-通用分类管理")
+@Tag(name = "[后台] sys-通用分类管理")
 @RestController
-@RequestMapping("/category")
+@RequestMapping("/admin/category")
 @RequiredArgsConstructor
 public class CategoryController {
 

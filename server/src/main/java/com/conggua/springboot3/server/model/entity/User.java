@@ -1,9 +1,6 @@
 package com.conggua.springboot3.server.model.entity;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -57,6 +54,10 @@ public class User implements Serializable {
     @TableField("avatar")
     private String avatar;
 
+    @Schema(description = "用户类型：0-后台，1-移动端")
+    @TableField("type")
+    private Integer type;
+
     @Schema(description = "创建时间")
     @TableField(value = "create_time", fill = FieldFill.INSERT)
     private LocalDateTime createTime;
@@ -64,4 +65,9 @@ public class User implements Serializable {
     @Schema(description = "更新时间")
     @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
+
+    @Schema(description = "逻辑删除")
+    @TableField("deleted")
+    @TableLogic
+    private LocalDateTime deleted;
 }

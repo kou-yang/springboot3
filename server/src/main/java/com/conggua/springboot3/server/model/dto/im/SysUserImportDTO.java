@@ -22,9 +22,6 @@ public class SysUserImportDTO {
     @ExcelProperty(value = "密码")
     private String password;
 
-    @ExcelProperty(value = "盐")
-    private String salt;
-
     @ExcelProperty(value = "用户名")
     private String userName;
 

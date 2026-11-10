@@ -1,4 +1,4 @@
-package com.conggua.springboot3.server.controller;
+package com.conggua.springboot3.server.controller.admin;
 
 import com.conggua.common.base.common.Result;
 import com.conggua.common.base.common.ResultUtils;
@@ -25,9 +25,9 @@ import java.util.List;
  * @author kouyang
  * @since 2026-01-09
  */
-@Tag(name = "sys-权限管理")
+@Tag(name = "[后台] sys-权限管理")
 @RestController
-@RequestMapping("/permission")
+@RequestMapping("/admin/permission")
 @RequiredArgsConstructor
 public class PermissionController {
 

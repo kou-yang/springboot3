@@ -27,11 +27,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = ConstraintViolationException.class)
     public Result<?> constraintViolationExceptionHandler(HttpServletRequest req, ConstraintViolationException ex) {
-        log.debug("constraintViolationExceptionHandler", ex);
+        log.error("constraintViolationExceptionHandler", ex);
         StringBuilder errorMsg = new StringBuilder();
         ex.getConstraintViolations().forEach(x -> errorMsg.append(x.getPropertyPath()).append(":").append(x.getMessage()).append(";"));
-        String message = errorMsg.toString();
-        return ResultUtils.error(CommonErrorEnum.REQUEST_PARAM_INVALID_ERROR, message.substring(0, message.length() - 1));
+        return ResultUtils.error(CommonErrorEnum.REQUEST_PARAM_INVALID_ERROR, stripTrailingSeparator(errorMsg));
     }
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
@@ -39,8 +38,7 @@ public class GlobalExceptionHandler {
         log.error("methodArgumentNotValidException", ex);
         StringBuilder errorMsg = new StringBuilder();
         ex.getBindingResult().getFieldErrors().forEach(x -> errorMsg.append(x.getField()).append(":").append(x.getDefaultMessage()).append(";"));
-        String message = errorMsg.toString();
-        return ResultUtils.error(CommonErrorEnum.REQUEST_PARAM_INVALID_ERROR, message.substring(0, message.length() - 1));
+        return ResultUtils.error(CommonErrorEnum.REQUEST_PARAM_INVALID_ERROR, stripTrailingSeparator(errorMsg));
     }
 
     @ExceptionHandler(value = BindException.class)
@@ -48,8 +46,7 @@ public class GlobalExceptionHandler {
         log.error("bindExceptionHandler", ex);
         StringBuilder errorMsg = new StringBuilder();
         ex.getBindingResult().getFieldErrors().forEach(x -> errorMsg.append(x.getField()).append(":").append(x.getDefaultMessage()).append(";"));
-        String message = errorMsg.toString();
-        return ResultUtils.error(CommonErrorEnum.REQUEST_PARAM_INVALID_ERROR, message.substring(0, message.length() - 1));
+        return ResultUtils.error(CommonErrorEnum.REQUEST_PARAM_INVALID_ERROR, stripTrailingSeparator(errorMsg));
     }
 
     @ExceptionHandler(UndeclaredThrowableException.class)
@@ -78,5 +75,15 @@ public class GlobalExceptionHandler {
     public Result<?> exceptionHandler(Exception ex) {
         log.error("exception", ex);
         return ResultUtils.error(CommonErrorEnum.SYSTEM_ERROR, ex.getMessage());
+    }
+
+    /**
+     * 去掉拼接错误信息时末尾多余的分隔符，空集合时返回空串，避免 substring 越界
+     */
+    private String stripTrailingSeparator(StringBuilder sb) {
+        if (sb.length() > 0) {
+            sb.setLength(sb.length() - 1);
+        }
+        return sb.toString();
     }
 }

@@ -6,6 +6,8 @@ import com.conggua.common.base.util.CollStreamUtils;
 import com.github.pagehelper.PageHelper;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import org.apache.commons.collections4.CollectionUtils;
@@ -25,9 +27,14 @@ import java.util.List;
 public class CommonPageDTO {
 
     @Schema(description = "页索引", defaultValue = "1")
+    @Min(value = 1, message = "页索引最小为1")
     private Integer pageIndex = 1;
+
     @Schema(description = "页大小", defaultValue = "10")
+    @Min(value = 1, message = "页大小最小为1")
+    @Max(value = 100, message = "页大小最大为100")
     private Integer pageSize = 10;
+
     @Schema(description = "排序")
     @Valid
     private List<Sort> sort;
@@ -38,6 +45,7 @@ public class CommonPageDTO {
         @Schema(description = "排序字段")
         @NotBlank
         private String field;
+
         @Schema(description = "排序方式", defaultValue = "desc", allowableValues = {"asc", "desc"})
         @NotBlank
         private String order;

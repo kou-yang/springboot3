@@ -25,7 +25,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 @RestControllerAdvice
 public class GlobalResponseBodyAdvice implements ResponseBodyAdvice<Object> {
 
-    @Value("${server.servlet.context-path}")
+    @Value("${server.servlet.context-path:}")
     private String contextPath;
     @Value("${global-response-switch.enabled:false}")
     private Boolean enabled;
@@ -43,7 +43,7 @@ public class GlobalResponseBodyAdvice implements ResponseBodyAdvice<Object> {
     @Override
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
         // 如果当前请求是 swagger 相关请求则不统一返回结果
-        if (request.getURI().getPath().startsWith(contextPath + "/swagger") || request.getURI().getPath().startsWith(contextPath + "/v2/api-docs")) {
+        if (request.getURI().getPath().startsWith(contextPath + "/swagger") || request.getURI().getPath().startsWith(contextPath + "/v3/api-docs")) {
             return body;
         }
         if (body instanceof String) {

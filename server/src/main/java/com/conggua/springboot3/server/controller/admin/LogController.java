@@ -1,4 +1,4 @@
-package com.conggua.springboot3.server.controller;
+package com.conggua.springboot3.server.controller.admin;
 
 import com.conggua.common.base.common.Result;
 import com.conggua.common.base.common.ResultUtils;
@@ -23,9 +23,9 @@ import org.springframework.web.bind.annotation.RestController;
  * @author kouyang
  * @since 2026-07-10
  */
-@Tag(name = "sys-日志管理")
+@Tag(name = "[后台] sys-日志管理")
 @RestController
-@RequestMapping("/log")
+@RequestMapping("/admin/log")
 @RequiredArgsConstructor
 public class LogController {
 
