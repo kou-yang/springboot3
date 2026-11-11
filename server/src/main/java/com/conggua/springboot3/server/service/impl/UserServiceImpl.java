@@ -62,7 +62,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public User save(UserSaveDTO dto) {
         User entity = new User();
         BeanUtils.copyProperties(dto, entity);
-        passwordEncoder.encode(entity.getPassword());
         entity.setPassword(passwordEncoder.encode(entity.getPassword()));
         this.save(entity);
 

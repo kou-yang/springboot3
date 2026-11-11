@@ -76,7 +76,7 @@ create table sys_user
     phone       varchar(20)            null comment '手机号',
     gender      tinyint(1)             null comment '性别',
     avatar      text                   null comment '头像',
-    type        tinyint    default 0   null comment '用户类型：0-后台，1-移动端',
+    type        tinyint    default 1   null comment '用户类型：0-后台，1-移动端',
     create_time datetime               null comment '创建时间',
     update_time datetime               null comment '更新时间',
     deleted     datetime               null comment '逻辑删除',
