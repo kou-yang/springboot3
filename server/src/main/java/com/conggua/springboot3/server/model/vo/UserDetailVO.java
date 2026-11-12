@@ -35,6 +35,9 @@ public class UserDetailVO implements Serializable {
     @Schema(description = "头像")
     private String avatar;
 
+    @Schema(description = "状态：0-禁用，1-启用")
+    private Boolean status;
+
     @Schema(description = "创建时间")
     private LocalDateTime createTime;
 

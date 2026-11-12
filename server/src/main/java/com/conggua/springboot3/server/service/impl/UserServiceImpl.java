@@ -96,7 +96,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         User entity = new User();
         BeanUtils.copyProperties(dto, entity);
         CRUDUtil.validateUpdateSuccess(this.updateById(entity));
-        RedisUtils.delete(RedisKey.getKeyNoTenant(RedisKey.USER_INFO, dto.getId()));
+        // 刷新登录缓存，禁用后由拦截器按 status 拦截提示
+        this.refreshUserInfoCache(dto.getId());
         return entity;
     }
 
@@ -142,9 +143,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (!Objects.equals(refreshToken, latestRefreshToken)) {
             throw new BusinessException(CommonErrorEnum.NOT_LOGIN_ERROR);
         }
-        // 用户已被删除时拒绝续期
-        if (Objects.isNull(this.getById(userId))) {
+        // 用户已被删除或禁用时拒绝续期
+        User dbUser = this.getById(userId);
+        if (Objects.isNull(dbUser)) {
             throw new BusinessException(CommonErrorEnum.NOT_LOGIN_ERROR);
+        }
+        if (Boolean.FALSE.equals(dbUser.getStatus())) {
+            throw new BusinessException(CommonErrorEnum.FORBIDDEN_ERROR);
         }
         // 生成新的 AccessToken
         Map<String, String> m = Map.of("userId", userId, "deviceFingerprint", deviceFingerprint);
@@ -231,5 +236,23 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         UserDetailVO vo = new UserDetailVO();
         BeanUtils.copyProperties(entity, vo);
         return vo;
+    }
+
+    /**
+     * 刷新用户登录缓存（保留设备指纹）；用户未登录（无缓存）时无需处理
+     */
+    private void refreshUserInfoCache(String userId) {
+        String key = RedisKey.getKeyNoTenant(RedisKey.USER_INFO, userId);
+        UserInfo cached = RedisUtils.get(key, UserInfo.class);
+        if (Objects.isNull(cached)) {
+            return;
+        }
+        User latest = this.getById(userId);
+        if (Objects.isNull(latest)) {
+            RedisUtils.delete(key);
+            return;
+        }
+        BeanUtils.copyProperties(latest, cached);
+        RedisUtils.set(key, cached, LoginConstant.REFRESH_TOKEN_EXPIRE, TimeUnit.DAYS);
     }
 }

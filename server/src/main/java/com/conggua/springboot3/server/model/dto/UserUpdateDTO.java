@@ -41,4 +41,7 @@ public class UserUpdateDTO implements Serializable {
 
     @Schema(description = "头像")
     private String avatar;
+
+    @Schema(description = "状态：0-禁用，1-启用")
+    private Boolean status;
 }

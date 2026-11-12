@@ -58,6 +58,10 @@ public class User implements Serializable {
     @TableField("type")
     private Integer type;
 
+    @Schema(description = "状态：0-禁用，1-启用")
+    @TableField("status")
+    private Boolean status;
+
     @Schema(description = "创建时间")
     @TableField(value = "create_time", fill = FieldFill.INSERT)
     private LocalDateTime createTime;

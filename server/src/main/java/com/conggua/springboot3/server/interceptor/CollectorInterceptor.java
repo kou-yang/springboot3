@@ -38,6 +38,11 @@ public class CollectorInterceptor implements HandlerInterceptor {
             CommonErrorEnum.NOT_LOGIN_ERROR.sendHttpError();
             return false;
         }
+        // 禁用用户统一拒绝（登录/续期入口另有校验）
+        if (Boolean.FALSE.equals(user.getStatus())) {
+            CommonErrorEnum.FORBIDDEN_ERROR.sendHttpError();
+            return false;
+        }
         UserHolder.set(user);
         return true;
     }

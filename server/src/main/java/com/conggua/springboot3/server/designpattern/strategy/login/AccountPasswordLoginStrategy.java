@@ -49,6 +49,9 @@ public class AccountPasswordLoginStrategy implements LoginStrategy {
         if (!UserTypeEnum.ADMIN.getType().equals(user.getType())) {
             throw new BusinessException(CommonErrorEnum.NO_AUTH_ERROR, "该账号无权登录后台");
         }
+        if (Boolean.FALSE.equals(user.getStatus())) {
+            throw new BusinessException(CommonErrorEnum.FORBIDDEN_ERROR);
+        }
         boolean matches = passwordEncoder.matches(password, user.getPassword());
         if (!matches) {
             throw new BusinessException(CommonErrorEnum.PASSWORD_ERROR);

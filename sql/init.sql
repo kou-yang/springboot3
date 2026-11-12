@@ -77,6 +77,7 @@ create table sys_user
     gender      tinyint(1)             null comment '性别',
     avatar      text                   null comment '头像',
     type        tinyint    default 1   null comment '用户类型：0-后台，1-移动端',
+    status      tinyint(1) default 1   null comment '状态：0-禁用，1-启用',
     create_time datetime               null comment '创建时间',
     update_time datetime               null comment '更新时间',
     deleted     datetime               null comment '逻辑删除',
