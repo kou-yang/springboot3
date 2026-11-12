@@ -3,6 +3,7 @@ package com.conggua.springboot3.server.controller.admin;
 import com.conggua.common.base.common.Result;
 import com.conggua.common.base.common.ResultUtils;
 import com.conggua.common.redis.annotation.Idempotent;
+import com.conggua.common.web.annotation.PreAuth;
 import com.conggua.common.web.model.request.PrimaryKeyDTO;
 import com.conggua.common.web.model.response.CommonPage;
 import com.conggua.springboot3.server.model.dto.DistributePermissionDTO;
@@ -32,6 +33,7 @@ public class RolePermissionController {
     private final RolePermissionService rolePermissionService;
 
     @Operation(summary = "保存")
+    @PreAuth("hasPermission('rolePerm:save')")
     @Idempotent(key = "#dto.roleId + #dto.permissionId")
     @PostMapping("/save")
     public Result<?> save(@Validated @RequestBody RolePermissionSaveDTO dto) {
@@ -40,6 +42,7 @@ public class RolePermissionController {
     }
 
     @Operation(summary = "删除")
+    @PreAuth("hasPermission('rolePerm:delete')")
     @PostMapping("/delete")
     public Result<?> delete(@Validated @RequestBody PrimaryKeyDTO dto) {
         rolePermissionService.remove(dto.id());
@@ -47,6 +50,7 @@ public class RolePermissionController {
     }
 
     @Operation(summary = "分页查询")
+    @PreAuth("hasPermission('rolePerm:page')")
     @PostMapping("/page")
     public Result<CommonPage<RolePermissionPageVO>> page(@Validated @RequestBody RolePermissionPageDTO dto) {
         CommonPage<RolePermissionPageVO> page = rolePermissionService.page(dto);
@@ -54,6 +58,7 @@ public class RolePermissionController {
     }
 
     @Operation(summary = "分配权限")
+    @PreAuth("hasPermission('rolePerm:distribute')")
     @PostMapping("/distribute")
     public Result<?> distribute(@Validated @RequestBody DistributePermissionDTO dto) {
         rolePermissionService.distribute(dto);
@@ -61,6 +66,7 @@ public class RolePermissionController {
     }
 
     @Operation(summary = "查询角色权限")
+    @PreAuth("hasPermission('rolePerm:permissions')")
     @GetMapping("/permissions")
     public Result<List<RolePermission>> listRolePermissions(String type, String roleId) {
         List<RolePermission> list = rolePermissionService.listBy(RolePermission::getType, type, RolePermission::getRoleId, roleId);

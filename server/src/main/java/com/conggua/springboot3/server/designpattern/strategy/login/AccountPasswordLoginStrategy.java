@@ -31,7 +31,8 @@ public class AccountPasswordLoginStrategy implements LoginStrategy {
         String account = dto.getAccount(), password = dto.getPassword();
         // 查询账户
         User user = this.getUser(account, password);
-        return this.generateToken(user);
+        // 后台用户加载权限码，随用户信息缓存；移动端用户无权限
+        return this.generateToken(user, userService.listPermissionCodes(user.getId()));
     }
 
     public User getUser(String account, String password) {

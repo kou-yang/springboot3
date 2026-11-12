@@ -2,6 +2,8 @@ package com.conggua.common.base.model.entity;
 
 import lombok.Data;
 
+import java.util.Set;
+
 /**
  * @author ky
  * @description
@@ -25,4 +27,9 @@ public class User {
      * 状态：false-禁用，true-启用
      */
     private Boolean status;
+
+    /**
+     * 权限标识集合（移动端用户为空）
+     */
+    private Set<String> permissions;
 }

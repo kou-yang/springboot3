@@ -4,6 +4,7 @@ import com.conggua.common.base.common.Result;
 import com.conggua.common.base.common.ResultUtils;
 import com.conggua.common.base.common.UserHolder;
 import com.conggua.common.redis.annotation.RateLimiter;
+import com.conggua.common.web.annotation.PreAuth;
 import com.conggua.common.web.model.request.PrimaryKeyDTO;
 import com.conggua.common.web.model.response.CommonPage;
 import com.conggua.springboot3.server.model.dto.UserLoginDTO;
@@ -37,6 +38,7 @@ public class UserController {
     private final UserService userService;
 
     @Operation(summary = "保存")
+    @PreAuth("hasPermission('user:save')")
     @PostMapping("/save")
     public Result<?> save(@Validated @RequestBody UserSaveDTO dto) {
         User entity = userService.save(dto);
@@ -44,6 +46,7 @@ public class UserController {
     }
 
     @Operation(summary = "删除")
+    @PreAuth("hasPermission('user:delete')")
     @PostMapping("/delete")
     public Result<?> delete(@Validated @RequestBody PrimaryKeyDTO dto) {
         userService.remove(dto.id());
@@ -51,6 +54,7 @@ public class UserController {
     }
 
     @Operation(summary = "更新")
+    @PreAuth("hasPermission('user:update')")
     @PostMapping("/update")
     public Result<?> update(@Validated @RequestBody UserUpdateDTO dto) {
         User entity = userService.update(dto);
@@ -58,6 +62,7 @@ public class UserController {
     }
 
     @Operation(summary = "分页查询")
+    @PreAuth("hasPermission('user:page')")
     @PostMapping("/page")
     public Result<CommonPage<UserPageVO>> page(@Validated @RequestBody UserPageDTO dto) {
         CommonPage<UserPageVO> page = userService.page(dto);
@@ -65,6 +70,7 @@ public class UserController {
     }
 
     @Operation(summary = "根据id查询详情")
+    @PreAuth("hasPermission('user:detail')")
     @GetMapping("/detail/{id}")
     public Result<UserDetailVO> getDetail(@PathVariable String id) {
         UserDetailVO vo = userService.getDetail(id);

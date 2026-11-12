@@ -12,8 +12,10 @@ import com.conggua.springboot3.server.model.vo.UserPageVO;
 import com.conggua.springboot3.server.model.vo.UserPermissionVO;
 import jakarta.validation.constraints.NotBlank;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author kouyang
@@ -79,6 +81,31 @@ public interface UserService extends BaseService<User> {
      * @return
      */
     List<UserPermissionVO> listUserPermissions(String userId, String type);
+
+    /**
+     * 获取用户权限码集合
+     * @param userId 用户ID
+     * @return 权限标识集合
+     */
+    Set<String> listPermissionCodes(String userId);
+
+    /**
+     * 刷新指定用户的权限缓存（仅处理有缓存的在线用户）
+     * @param userIds 用户ID集合
+     */
+    void refreshPermissionCacheByUserIds(Collection<String> userIds);
+
+    /**
+     * 刷新指定角色下所有用户的权限缓存
+     * @param roleIds 角色ID集合
+     */
+    void refreshPermissionCacheByRoleIds(Collection<String> roleIds);
+
+    /**
+     * 刷新关联指定权限的所有用户的权限缓存
+     * @param permissionIds 权限ID集合
+     */
+    void refreshPermissionCacheByPermissionIds(Collection<String> permissionIds);
 
     /**
      * 获取用户信息

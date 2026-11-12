@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.conggua.common.base.common.Result;
 import com.conggua.common.base.common.ResultUtils;
 import com.conggua.common.base.util.TreeUtils;
+import com.conggua.common.web.annotation.PreAuth;
 import com.conggua.common.web.model.request.PrimaryKeyDTO;
 import com.conggua.common.web.model.response.CommonPage;
 import com.conggua.springboot3.server.model.dto.CategoryPageDTO;
@@ -34,6 +35,7 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @Operation(summary = "保存")
+    @PreAuth("hasPermission('category:save')")
     @PostMapping("/save")
     public Result<?> save(@Validated @RequestBody CategorySaveDTO dto) {
         Category entity = categoryService.save(dto);
@@ -41,6 +43,7 @@ public class CategoryController {
     }
 
     @Operation(summary = "删除")
+    @PreAuth("hasPermission('category:delete')")
     @PostMapping("/delete")
     public Result<?> delete(@Validated @RequestBody PrimaryKeyDTO dto) {
         categoryService.remove(dto.id());
@@ -48,6 +51,7 @@ public class CategoryController {
     }
 
     @Operation(summary = "更新")
+    @PreAuth("hasPermission('category:update')")
     @PostMapping("/update")
     public Result<?> update(@Validated @RequestBody CategoryUpdateDTO dto) {
         Category entity = categoryService.update(dto);
@@ -55,6 +59,7 @@ public class CategoryController {
     }
 
     @Operation(summary = "分页查询")
+    @PreAuth("hasPermission('category:page')")
     @PostMapping("/page")
     public Result<CommonPage<CategoryPageVO>> page(@Validated @RequestBody CategoryPageDTO dto) {
         CommonPage<CategoryPageVO> page = categoryService.page(dto);
@@ -62,6 +67,7 @@ public class CategoryController {
     }
 
     @Operation(summary = "根据id查询详情")
+    @PreAuth("hasPermission('category:detail')")
     @GetMapping("/detail/{id}")
     public Result<CategoryDetailVO> getDetail(@PathVariable String id) {
         CategoryDetailVO vo = categoryService.getDetail(id);
@@ -69,6 +75,7 @@ public class CategoryController {
     }
 
     @Operation(summary = "查询全部")
+    @PreAuth("hasPermission('category:all')")
     @GetMapping("/all")
     public Result<List<Category>> listAll(String module) {
         List<Category> list = categoryService.list(new LambdaQueryWrapper<Category>().eq(Category::getModule, module).orderByAsc(Category::getSort));

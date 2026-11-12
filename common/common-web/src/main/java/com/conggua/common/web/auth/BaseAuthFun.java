@@ -1,11 +1,16 @@
 package com.conggua.common.web.auth;
 
+import com.conggua.common.base.common.UserHolder;
+import com.conggua.common.base.model.entity.User;
 import com.conggua.common.web.constant.DateFormatterConstant;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * @author ky
@@ -27,15 +32,26 @@ public class BaseAuthFun {
     }
 
     public Boolean hasPermission(String permission) {
-        return false;
+        return currentPermissions().contains(permission);
     }
 
     public Boolean hasPermissions(String... permission) {
-        return false;
+        return currentPermissions().containsAll(Arrays.asList(permission));
     }
 
     public Boolean hasAnyPermission(String... permission) {
-        return false;
+        return Arrays.stream(permission).anyMatch(currentPermissions()::contains);
+    }
+
+    /**
+     * 当前用户权限码（登录时缓存在 Redis 用户信息中，移动端用户为空）
+     */
+    private Set<String> currentPermissions() {
+        User user = UserHolder.get();
+        if (Objects.isNull(user) || Objects.isNull(user.getPermissions())) {
+            return Set.of();
+        }
+        return user.getPermissions();
     }
 
     public Boolean betweenDateTime(String startTime, String endTime) {

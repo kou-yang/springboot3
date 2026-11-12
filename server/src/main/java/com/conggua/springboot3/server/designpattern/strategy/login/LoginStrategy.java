@@ -11,6 +11,7 @@ import com.conggua.springboot3.server.model.entity.User;
 import org.springframework.beans.BeanUtils;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -30,9 +31,10 @@ public interface LoginStrategy {
     /**
      * 生成token
      * @param user
+     * @param permissions 权限码集合（移动端用户传空集合）
      * @return
      */
-    default Map<String, String> generateToken(User user) {
+    default Map<String, String> generateToken(User user, Set<String> permissions) {
         String userId = user.getId();
         // 生成设备指纹
         String deviceFingerprint = UUIDUtils.getUuid();
@@ -48,6 +50,7 @@ public interface LoginStrategy {
         UserInfo userInfo = new UserInfo();
         BeanUtils.copyProperties(user, userInfo);
         userInfo.setDeviceFingerprint(deviceFingerprint);
+        userInfo.setPermissions(permissions);
         RedisUtils.set(RedisKey.getKeyNoTenant(RedisKey.USER_INFO, userId), userInfo, LoginConstant.REFRESH_TOKEN_EXPIRE, TimeUnit.DAYS);
 
         return Map.of("accessToken", accessToken, "refreshToken", refreshToken);

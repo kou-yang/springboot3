@@ -2,6 +2,7 @@ package com.conggua.springboot3.server.controller.admin;
 
 import com.conggua.common.base.common.Result;
 import com.conggua.common.base.common.ResultUtils;
+import com.conggua.common.web.annotation.PreAuth;
 import com.conggua.common.web.model.request.PrimaryKeyDTO;
 import com.conggua.common.web.model.request.PrimaryKeysDTO;
 import com.conggua.common.web.model.response.CommonPage;
@@ -32,6 +33,7 @@ public class LogController {
     private final LogService logService;
 
     @Operation(summary = "删除")
+    @PreAuth("hasPermission('log:delete')")
     @PostMapping("/delete")
     public Result<?> delete(@Validated @RequestBody PrimaryKeyDTO dto) {
         logService.remove(dto.id());
@@ -39,6 +41,7 @@ public class LogController {
     }
 
     @Operation(summary = "批量删除")
+    @PreAuth("hasPermission('log:batchDelete')")
     @PostMapping("/batch/delete")
     public Result<?> deleteBatch(@Validated @RequestBody PrimaryKeysDTO dto) {
         dto.ids().forEach(logService::remove);
@@ -46,6 +49,7 @@ public class LogController {
     }
 
     @Operation(summary = "分页查询")
+    @PreAuth("hasPermission('log:page')")
     @PostMapping("/page")
     public Result<CommonPage<LogPageVO>> page(@Validated @RequestBody LogPageDTO dto) {
         CommonPage<LogPageVO> page = logService.page(dto);
@@ -53,6 +57,7 @@ public class LogController {
     }
 
     @Operation(summary = "游标分页查询")
+    @PreAuth("hasPermission('log:pageCursor')")
     @PostMapping("/page/cursor")
     public Result<LogCursorVO> pageByCursor(@Validated @RequestBody LogCursorPageDTO dto) {
         LogCursorVO cursorVO = logService.pageByCursor(dto);

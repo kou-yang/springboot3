@@ -20,11 +20,14 @@ import com.conggua.springboot3.server.model.vo.PermissionPageVO;
 import com.conggua.springboot3.server.model.vo.UserPermissionVO;
 import com.conggua.springboot3.server.service.PermissionService;
 import com.conggua.springboot3.server.service.RolePermissionService;
+import com.conggua.springboot3.server.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,6 +43,10 @@ import java.util.Objects;
 @Service
 @RequiredArgsConstructor
 public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permission> implements PermissionService {
+
+    @Autowired
+    @Lazy
+    private UserService userService;
 
     @Override
     public Permission save(PermissionSaveDTO dto) {
@@ -58,6 +65,8 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     public void remove(String id) {
         boolean one = this.removeById(id);
         CRUDUtil.validateDeleteSuccess(one);
+        // 趁关联还在定位受影响用户，刷新权限缓存
+        userService.refreshPermissionCacheByPermissionIds(List.of(id));
         // 删除角色分配的权限
         // 删除分配的权限
         RolePermissionService rolePermissionService = SpringContextUtils.getBean(RolePermissionService.class);
@@ -76,6 +85,8 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         Permission entity = new Permission();
         BeanUtils.copyProperties(dto, entity);
         this.updateById(entity);
+        // 权限编码/状态可能变更，刷新关联用户缓存
+        userService.refreshPermissionCacheByPermissionIds(List.of(dto.getId()));
         return entity;
     }
 

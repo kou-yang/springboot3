@@ -3,6 +3,7 @@ package com.conggua.springboot3.server.controller.admin;
 import com.conggua.common.base.common.Result;
 import com.conggua.common.base.common.ResultUtils;
 import com.conggua.common.redis.annotation.Idempotent;
+import com.conggua.common.web.annotation.PreAuth;
 import com.conggua.common.web.model.request.PrimaryKeyDTO;
 import com.conggua.common.web.model.response.CommonPage;
 import com.conggua.springboot3.server.model.dto.PermissionPageDTO;
@@ -34,6 +35,7 @@ public class PermissionController {
     private final PermissionService permissionService;
 
     @Operation(summary = "保存")
+    @PreAuth("hasPermission('perm:save')")
     @Idempotent(key = "#dto.type + #dto.code")
     @PostMapping("/save")
     public Result<?> save(@Validated @RequestBody PermissionSaveDTO dto) {
@@ -42,6 +44,7 @@ public class PermissionController {
     }
 
     @Operation(summary = "删除")
+    @PreAuth("hasPermission('perm:delete')")
     @PostMapping("/delete")
     public Result<?> delete(@Validated @RequestBody PrimaryKeyDTO dto) {
         permissionService.remove(dto.id());
@@ -49,6 +52,7 @@ public class PermissionController {
     }
 
     @Operation(summary = "更新")
+    @PreAuth("hasPermission('perm:update')")
     @Idempotent(key = "#dto.code ?: 'default_code'")
     @PostMapping("/update")
     public Result<?> update(@Validated @RequestBody PermissionUpdateDTO dto) {
@@ -57,6 +61,7 @@ public class PermissionController {
     }
 
     @Operation(summary = "分页查询")
+    @PreAuth("hasPermission('perm:page')")
     @PostMapping("/page")
     public Result<CommonPage<PermissionPageVO>> page(@Validated @RequestBody PermissionPageDTO dto) {
         CommonPage<PermissionPageVO> page = permissionService.page(dto);
@@ -64,6 +69,7 @@ public class PermissionController {
     }
 
     @Operation(summary = "根据id查询详情")
+    @PreAuth("hasPermission('perm:detail')")
     @GetMapping("/detail/{id}")
     public Result<PermissionDetailVO> getDetail(@PathVariable String id) {
         PermissionDetailVO vo = permissionService.getDetail(id);
@@ -71,6 +77,7 @@ public class PermissionController {
     }
 
     @Operation(summary = "查询全部")
+    @PreAuth("hasPermission('perm:all')")
     @GetMapping("/all")
     public Result<List<UserPermissionVO>> listAll(String type, Boolean status) {
         List<UserPermissionVO> tree = permissionService.all(type, status);

@@ -44,10 +44,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -210,6 +207,46 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             return vo;
         });
         return TreeUtils.translate(voList, UserPermissionVO::getId, UserPermissionVO::getParentId);
+    }
+
+    @Override
+    public Set<String> listPermissionCodes(String userId) {
+        return CollStreamUtils.toSet(this.listUserPermissions(userId, null), UserPermissionVO::getCode);
+    }
+
+    @Override
+    public void refreshPermissionCacheByUserIds(Collection<String> userIds) {
+        if (CollectionUtils.isEmpty(userIds)) {
+            return;
+        }
+        for (String userId : userIds) {
+            String key = RedisKey.getKeyNoTenant(RedisKey.USER_INFO, userId);
+            UserInfo cached = RedisUtils.get(key, UserInfo.class);
+            // 离线用户无缓存，下次登录时加载最新权限
+            if (Objects.isNull(cached)) {
+                continue;
+            }
+            cached.setPermissions(this.listPermissionCodes(userId));
+            RedisUtils.set(key, cached, LoginConstant.REFRESH_TOKEN_EXPIRE, TimeUnit.DAYS);
+        }
+    }
+
+    @Override
+    public void refreshPermissionCacheByRoleIds(Collection<String> roleIds) {
+        if (CollectionUtils.isEmpty(roleIds)) {
+            return;
+        }
+        List<UserRole> userRoleList = userRoleService.lambdaQuery().in(UserRole::getRoleId, roleIds).list();
+        this.refreshPermissionCacheByUserIds(CollStreamUtils.toDistinctList(userRoleList, UserRole::getUserId));
+    }
+
+    @Override
+    public void refreshPermissionCacheByPermissionIds(Collection<String> permissionIds) {
+        if (CollectionUtils.isEmpty(permissionIds)) {
+            return;
+        }
+        List<RolePermission> rolePermissionList = rolePermissionService.lambdaQuery().in(RolePermission::getPermissionId, permissionIds).list();
+        this.refreshPermissionCacheByRoleIds(CollStreamUtils.toDistinctList(rolePermissionList, RolePermission::getRoleId));
     }
 
     @Override

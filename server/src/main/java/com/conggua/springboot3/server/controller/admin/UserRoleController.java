@@ -2,6 +2,7 @@ package com.conggua.springboot3.server.controller.admin;
 
 import com.conggua.common.base.common.Result;
 import com.conggua.common.base.common.ResultUtils;
+import com.conggua.common.web.annotation.PreAuth;
 import com.conggua.common.web.model.request.PrimaryKeyDTO;
 import com.conggua.common.web.model.response.CommonPage;
 import com.conggua.springboot3.server.model.dto.DistributeRoleDTO;
@@ -33,6 +34,7 @@ public class UserRoleController {
     private final UserRoleService userRoleService;
 
     @Operation(summary = "保存")
+    @PreAuth("hasPermission('userRole:save')")
     @PostMapping("/save")
     public Result<?> save(@Validated @RequestBody UserRoleSaveDTO dto) {
         UserRole entity = userRoleService.save(dto);
@@ -40,6 +42,7 @@ public class UserRoleController {
     }
 
     @Operation(summary = "删除")
+    @PreAuth("hasPermission('userRole:delete')")
     @PostMapping("/delete")
     public Result<?> delete(@Validated @RequestBody PrimaryKeyDTO dto) {
         userRoleService.remove(dto.id());
@@ -47,6 +50,7 @@ public class UserRoleController {
     }
 
     @Operation(summary = "更新")
+    @PreAuth("hasPermission('userRole:update')")
     @PostMapping("/update")
     public Result<?> update(@Validated @RequestBody UserRoleUpdateDTO dto) {
         UserRole entity = userRoleService.update(dto);
@@ -54,6 +58,7 @@ public class UserRoleController {
     }
 
     @Operation(summary = "分页查询")
+    @PreAuth("hasPermission('userRole:page')")
     @PostMapping("/page")
     public Result<CommonPage<UserRolePageVO>> page(@Validated @RequestBody UserRolePageDTO dto) {
         CommonPage<UserRolePageVO> page = userRoleService.page(dto);
@@ -61,6 +66,7 @@ public class UserRoleController {
     }
 
     @Operation(summary = "根据id查询详情")
+    @PreAuth("hasPermission('userRole:detail')")
     @GetMapping("/detail/{id}")
     public Result<UserRoleDetailVO> getDetail(@PathVariable String id) {
         UserRoleDetailVO vo = userRoleService.getDetail(id);
@@ -68,6 +74,7 @@ public class UserRoleController {
     }
 
     @Operation(summary = "查询全部")
+    @PreAuth("hasPermission('userRole:all')")
     @GetMapping("/all")
     public Result<List<UserRole>> listAll() {
         List<UserRole> list = userRoleService.list();
@@ -75,6 +82,7 @@ public class UserRoleController {
     }
 
     @Operation(summary = "分配角色")
+    @PreAuth("hasPermission('userRole:distribute')")
     @PostMapping("/distribute")
     public Result<?> distribute(@Validated @RequestBody DistributeRoleDTO dto) {
         userRoleService.distribute(dto);
@@ -82,6 +90,7 @@ public class UserRoleController {
     }
 
     @Operation(summary = "查询用户角色")
+    @PreAuth("hasPermission('userRole:roles')")
     @GetMapping("/roles")
     public Result<List<UserRole>> listUserRoles(String userId) {
         List<UserRole> list = userRoleService.listBy(UserRole::getUserId, userId);

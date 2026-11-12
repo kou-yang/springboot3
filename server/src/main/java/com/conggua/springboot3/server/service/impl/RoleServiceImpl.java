@@ -18,11 +18,14 @@ import com.conggua.springboot3.server.model.vo.RoleDetailVO;
 import com.conggua.springboot3.server.model.vo.RolePageVO;
 import com.conggua.springboot3.server.service.RolePermissionService;
 import com.conggua.springboot3.server.service.RoleService;
+import com.conggua.springboot3.server.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +41,10 @@ import java.util.Objects;
 @Service
 @RequiredArgsConstructor
 public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements RoleService {
+
+    @Autowired
+    @Lazy
+    private UserService userService;
 
     @Override
     public Role save(RoleSaveDTO dto) {
@@ -56,6 +63,8 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     public void remove(String id) {
         boolean one = this.removeById(id);
         CRUDUtil.validateDeleteSuccess(one);
+        // 趁关联还在定位受影响用户，刷新权限缓存
+        userService.refreshPermissionCacheByRoleIds(List.of(id));
         // 删除分配的权限
         RolePermissionService rolePermissionService = SpringContextUtils.getBean(RolePermissionService.class);
         rolePermissionService.removeBy(RolePermission::getRoleId, id);

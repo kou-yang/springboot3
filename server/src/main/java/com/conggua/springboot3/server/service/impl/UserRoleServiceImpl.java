@@ -18,15 +18,20 @@ import com.conggua.springboot3.server.model.vo.UserRoleDetailVO;
 import com.conggua.springboot3.server.model.vo.UserRolePageVO;
 import com.conggua.springboot3.server.service.RoleService;
 import com.conggua.springboot3.server.service.UserRoleService;
+import com.conggua.springboot3.server.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author kouyang
@@ -39,25 +44,44 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
 
     private final RoleService roleService;
 
+    @Autowired
+    @Lazy
+    private UserService userService;
+
     @Override
     public UserRole save(UserRoleSaveDTO dto) {
         UserRole entity = new UserRole();
         BeanUtils.copyProperties(dto, entity);
         this.save(entity);
+        userService.refreshPermissionCacheByUserIds(List.of(dto.getUserId()));
         return entity;
     }
 
     @Override
     public void remove(String id) {
+        UserRole entity = this.getById(id);
         boolean one = this.removeById(id);
         CRUDUtil.validateDeleteSuccess(one);
+        if (Objects.nonNull(entity)) {
+            userService.refreshPermissionCacheByUserIds(List.of(entity.getUserId()));
+        }
     }
 
     @Override
     public UserRole update(UserRoleUpdateDTO dto) {
+        UserRole old = this.getById(dto.getId());
         UserRole entity = new UserRole();
         BeanUtils.copyProperties(dto, entity);
         this.updateById(entity);
+        // userId/roleId 可能变更，刷新新旧受影响用户
+        List<String> userIds = new ArrayList<>();
+        if (Objects.nonNull(old)) {
+            userIds.add(old.getUserId());
+        }
+        if (Objects.nonNull(dto.getUserId())) {
+            userIds.add(dto.getUserId());
+        }
+        userService.refreshPermissionCacheByUserIds(userIds);
         return entity;
     }
 
@@ -96,6 +120,7 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
         });
         boolean one = saveBatch(list);
         CRUDUtil.validateSaveSuccess(one);
+        userService.refreshPermissionCacheByUserIds(List.of(dto.getUserId()));
     }
 
     public List<UserRolePageVO> entityList2PageVOList(List<UserRole> entityList) {

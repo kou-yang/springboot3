@@ -20,18 +20,19 @@ import com.conggua.springboot3.server.model.vo.RolePermissionPageVO;
 import com.conggua.springboot3.server.service.PermissionService;
 import com.conggua.springboot3.server.service.RolePermissionService;
 import com.conggua.springboot3.server.service.RoleService;
+import com.conggua.springboot3.server.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author kouyang
@@ -44,6 +45,10 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
 
     private final RoleService roleService;
     private final PermissionService permissionService;
+
+    @Autowired
+    @Lazy
+    private UserService userService;
 
     @Override
     public RolePermission save(RolePermissionSaveDTO dto) {
@@ -58,20 +63,35 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
         BeanUtils.copyProperties(dto, entity);
         entity.setType(permission.getType());
         this.save(entity);
+        userService.refreshPermissionCacheByRoleIds(List.of(dto.getRoleId()));
         return entity;
     }
 
     @Override
     public void remove(String id) {
+        RolePermission entity = this.getById(id);
         boolean one = this.removeById(id);
         CRUDUtil.validateDeleteSuccess(one);
+        if (Objects.nonNull(entity)) {
+            userService.refreshPermissionCacheByRoleIds(List.of(entity.getRoleId()));
+        }
     }
 
     @Override
     public RolePermission update(RolePermissionUpdateDTO dto) {
+        RolePermission old = this.getById(dto.getId());
         RolePermission entity = new RolePermission();
         BeanUtils.copyProperties(dto, entity);
         this.updateById(entity);
+        // roleId 可能变更，刷新新旧受影响角色下的用户
+        List<String> roleIds = new ArrayList<>();
+        if (Objects.nonNull(old)) {
+            roleIds.add(old.getRoleId());
+        }
+        if (Objects.nonNull(dto.getRoleId())) {
+            roleIds.add(dto.getRoleId());
+        }
+        userService.refreshPermissionCacheByRoleIds(roleIds);
         return entity;
     }
 
@@ -119,6 +139,7 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
         });
         boolean one = saveBatch(list);
         CRUDUtil.validateSaveSuccess(one);
+        userService.refreshPermissionCacheByRoleIds(List.of(dto.getRoleId()));
     }
 
     public List<RolePermissionPageVO> entityList2PageVOList(List<RolePermission> entityList) {

@@ -3,6 +3,7 @@ package com.conggua.springboot3.server.controller.admin;
 import com.conggua.common.base.common.Result;
 import com.conggua.common.base.common.ResultUtils;
 import com.conggua.common.redis.annotation.Idempotent;
+import com.conggua.common.web.annotation.PreAuth;
 import com.conggua.common.web.model.request.PrimaryKeyDTO;
 import com.conggua.common.web.model.response.CommonPage;
 import com.conggua.springboot3.server.model.dto.RolePageDTO;
@@ -33,6 +34,7 @@ public class RoleController {
     private final RoleService roleService;
 
     @Operation(summary = "保存")
+    @PreAuth("hasPermission('role:save')")
     @Idempotent(key = "#dto.code")
     @PostMapping("/save")
     public Result<?> save(@Validated @RequestBody RoleSaveDTO dto) {
@@ -41,6 +43,7 @@ public class RoleController {
     }
 
     @Operation(summary = "删除")
+    @PreAuth("hasPermission('role:delete')")
     @PostMapping("/delete")
     public Result<?> delete(@Validated @RequestBody PrimaryKeyDTO dto) {
         roleService.remove(dto.id());
@@ -48,6 +51,7 @@ public class RoleController {
     }
 
     @Operation(summary = "更新")
+    @PreAuth("hasPermission('role:update')")
     @Idempotent(key = "#dto.code ?: 'default_code'")
     @PostMapping("/update")
     public Result<?> update(@Validated @RequestBody RoleUpdateDTO dto) {
@@ -56,6 +60,7 @@ public class RoleController {
     }
 
     @Operation(summary = "分页查询")
+    @PreAuth("hasPermission('role:page')")
     @PostMapping("/page")
     public Result<CommonPage<RolePageVO>> page(@Validated @RequestBody RolePageDTO dto) {
         CommonPage<RolePageVO> page = roleService.page(dto);
@@ -63,6 +68,7 @@ public class RoleController {
     }
 
     @Operation(summary = "根据id查询详情")
+    @PreAuth("hasPermission('role:detail')")
     @GetMapping("/detail/{id}")
     public Result<RoleDetailVO> getDetail(@PathVariable String id) {
         RoleDetailVO vo = roleService.getDetail(id);
@@ -70,6 +76,7 @@ public class RoleController {
     }
 
     @Operation(summary = "查询全部")
+    @PreAuth("hasPermission('role:all')")
     @GetMapping("/all")
     public Result<List<Role>> listAll() {
         List<Role> list = roleService.list();
