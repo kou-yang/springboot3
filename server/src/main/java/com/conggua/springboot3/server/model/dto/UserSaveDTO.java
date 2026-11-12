@@ -1,5 +1,7 @@
 package com.conggua.springboot3.server.model.dto;
 
+import com.conggua.common.base.util.sensitive.Sensitive;
+import com.conggua.common.base.util.sensitive.SensitiveStrategy;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -28,6 +30,7 @@ public class UserSaveDTO implements Serializable {
     private String account;
 
     @Schema(description = "密码")
+    @Sensitive(strategy = SensitiveStrategy.PASSWORD)
     @NotBlank
     private String password;
 

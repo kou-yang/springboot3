@@ -31,6 +31,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         List<String> excludePath = List.of(
                 "/admin/user/login",
                 "/admin/user/renewal",
+                // swagger
                 "/v3/api-docs",
                 "/v3/api-docs/**",
                 "/swagger-ui/**",

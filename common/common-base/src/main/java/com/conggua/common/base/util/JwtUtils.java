@@ -5,8 +5,6 @@ import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.conggua.common.base.exception.BusinessException;
-import com.conggua.common.base.exception.CommonErrorEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -29,12 +27,12 @@ public class JwtUtils {
 
     private static String REFRESH_SECRET;
 
-    @Value("${jwt.access-token-secret:miaysnvi}")
+    @Value("${jwt.access-token-secret}")
     public void setAccessSecret(String accessSecret) {
         JwtUtils.ACCESS_SECRET = accessSecret;
     }
 
-    @Value("${jwt.refresh-token-secret:onxhsyvn}")
+    @Value("${jwt.refresh-token-secret}")
     public void setRefreshSecret(String refreshSecret) {
         JwtUtils.REFRESH_SECRET = refreshSecret;
     }
@@ -76,14 +74,14 @@ public class JwtUtils {
     /**
      * 解析token
      * @param token
-     * @return userId
+     * @return 校验通过返回 DecodedJWT，失败（缺失/格式错误/签名不符）返回 null，由调用方决定错误语义
      */
     public static DecodedJWT verify(String token, Boolean isAccess) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(isAccess ? ACCESS_SECRET : REFRESH_SECRET);
             return JWT.require(algorithm).build().verify(token);
         } catch (Exception e) {
-            throw new BusinessException(CommonErrorEnum.UN_KNOWN_SESSION_ERROR);
+            return null;
         }
     }
 

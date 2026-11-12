@@ -27,7 +27,12 @@ public enum SensitiveStrategy {
     /**
      * 邮箱
      */
-    EMAIL(s -> s.replaceAll("(^\\w)[^@]*(@.*$)", "$1****$2"));
+    EMAIL(s -> s.replaceAll("(^\\w)[^@]*(@.*$)", "$1****$2")),
+
+    /**
+     * 密码（全遮蔽，用于日志等输出场景）
+     */
+    PASSWORD(s -> "******");
 
     private final Function<String, String> desensitizer;
 

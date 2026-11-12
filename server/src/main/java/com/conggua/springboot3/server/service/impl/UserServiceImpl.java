@@ -11,6 +11,7 @@ import com.conggua.common.redis.util.RedisUtils;
 import com.conggua.common.web.model.response.CommonPage;
 import com.conggua.springboot3.server.constant.LoginConstant;
 import com.conggua.springboot3.server.constant.RedisKey;
+import com.conggua.springboot3.server.constant.UserTypeEnum;
 import com.conggua.springboot3.server.designpattern.strategy.login.LoginStrategy;
 import com.conggua.springboot3.server.designpattern.strategy.login.LoginStrategyContext;
 import com.conggua.springboot3.server.mapper.UserMapper;
@@ -62,6 +63,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public User save(UserSaveDTO dto) {
         User entity = new User();
         BeanUtils.copyProperties(dto, entity);
+        // 后台创建的用户固定为后台类型，避免落库走移动端默认值
+        entity.setType(UserTypeEnum.ADMIN.getType());
         entity.setPassword(passwordEncoder.encode(entity.getPassword()));
         this.save(entity);
 

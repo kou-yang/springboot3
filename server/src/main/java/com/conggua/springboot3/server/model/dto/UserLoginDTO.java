@@ -1,5 +1,7 @@
 package com.conggua.springboot3.server.model.dto;
 
+import com.conggua.common.base.util.sensitive.Sensitive;
+import com.conggua.common.base.util.sensitive.SensitiveStrategy;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -20,5 +22,6 @@ public class UserLoginDTO {
     private String account;
 
     @Schema(description = "密码")
+    @Sensitive(strategy = SensitiveStrategy.PASSWORD)
     private String password;
 }

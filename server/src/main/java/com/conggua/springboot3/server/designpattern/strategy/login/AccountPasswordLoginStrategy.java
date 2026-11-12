@@ -2,6 +2,7 @@ package com.conggua.springboot3.server.designpattern.strategy.login;
 
 import com.conggua.common.base.exception.BusinessException;
 import com.conggua.common.base.exception.CommonErrorEnum;
+import com.conggua.springboot3.server.constant.UserTypeEnum;
 import com.conggua.springboot3.server.model.dto.UserLoginDTO;
 import com.conggua.springboot3.server.model.entity.User;
 import com.conggua.springboot3.server.service.UserService;
@@ -43,6 +44,10 @@ public class AccountPasswordLoginStrategy implements LoginStrategy {
     private void validateUser(String password, User user) {
         if (Objects.isNull(user)) {
             throw new BusinessException(CommonErrorEnum.ACCOUNT_ERROR);
+        }
+        // 后台登录口仅允许后台用户
+        if (!UserTypeEnum.ADMIN.getType().equals(user.getType())) {
+            throw new BusinessException(CommonErrorEnum.NO_AUTH_ERROR, "该账号无权登录后台");
         }
         boolean matches = passwordEncoder.matches(password, user.getPassword());
         if (!matches) {

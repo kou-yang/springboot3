@@ -3,6 +3,7 @@ package com.conggua.springboot3.server.controller.admin;
 import com.conggua.common.base.common.Result;
 import com.conggua.common.base.common.ResultUtils;
 import com.conggua.common.base.common.UserHolder;
+import com.conggua.common.redis.annotation.RateLimiter;
 import com.conggua.common.web.model.request.PrimaryKeyDTO;
 import com.conggua.common.web.model.response.CommonPage;
 import com.conggua.springboot3.server.model.dto.UserLoginDTO;
@@ -78,6 +79,7 @@ public class UserController {
 //    }
 
     @Operation(summary = "登录")
+    @RateLimiter(time = 60L, count = 10)
     @PostMapping("/login")
     public Result<?> login(@Validated @RequestBody UserLoginDTO dto) {
         Map<String, String> tokenMap = userService.login(dto);
