@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @TableName("sys_log")
-@Schema(name = "Log", description = "$!{table.comment}")
+@Schema(name = "Log", description = "日志")
 public class Log implements Serializable {
 
     @Serial

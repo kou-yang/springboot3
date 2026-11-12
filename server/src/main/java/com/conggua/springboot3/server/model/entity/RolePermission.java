@@ -23,7 +23,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @TableName("sys_role_permission")
-@Schema(name = "RolePermission", description = "$!{table.comment}")
+@Schema(name = "RolePermission", description = "角色权限")
 public class RolePermission implements Serializable {
 
     @Serial

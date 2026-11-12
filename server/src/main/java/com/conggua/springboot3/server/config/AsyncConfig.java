@@ -23,6 +23,9 @@ public class AsyncConfig {
         executor.setQueueCapacity(1024);
         executor.setThreadNamePrefix("log-db-writer-");
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+        // 停机时等待队列中的日志写完
+        executor.setWaitForTasksToCompleteOnShutdown(true);
+        executor.setAwaitTerminationSeconds(30);
         executor.initialize();
         return executor;
     }

@@ -31,6 +31,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
         List<String> excludePath = List.of(
                 "/admin/user/login",
                 "/admin/user/renewal",
+                // 健康检查（运维探活）
+                "/actuator/health",
                 // swagger
                 "/v3/api-docs",
                 "/v3/api-docs/**",

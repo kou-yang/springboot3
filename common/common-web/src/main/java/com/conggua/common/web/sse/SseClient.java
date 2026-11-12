@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 /**
@@ -22,11 +21,6 @@ import java.util.function.Consumer;
 @Slf4j
 @Component
 public class SseClient {
-
-    /**
-     * 当前连接数
-     */
-    private static final AtomicInteger count = new AtomicInteger(0);
 
     /**
      * 存放每个用户对应的 SseEmitter 对象（可用 Redis 替代）
@@ -52,9 +46,6 @@ public class SseClient {
             sseEmitter.onError(errorCallBack(userId));
             sseEmitter.onTimeout(timeoutCallBack(userId));
             sseEmitterMap.put(userId, sseEmitter);
-
-            // 数量+1
-            count.getAndIncrement();
 
             log.info("创建Sse连接成功，userId：{}，当前连接数：{}", userId, getConnectCount());
             return sseEmitter;
@@ -111,7 +102,6 @@ public class SseClient {
 
     public void removeUser(String userId) {
         sseEmitterMap.remove(userId);
-        count.getAndDecrement();
         log.info("移除用户：{}，当前连接数：{}", userId, getConnectCount());
     }
 
@@ -120,7 +110,7 @@ public class SseClient {
     }
 
     public int getConnectCount() {
-        return count.intValue();
+        return sseEmitterMap.size();
     }
 
     private Runnable completionCallBack(String userId) {

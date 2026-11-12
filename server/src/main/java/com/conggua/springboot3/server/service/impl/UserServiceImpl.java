@@ -6,7 +6,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.conggua.common.base.common.UserHolder;
 import com.conggua.common.base.exception.BusinessException;
 import com.conggua.common.base.exception.CommonErrorEnum;
-import com.conggua.common.base.util.*;
+import com.conggua.common.base.util.CRUDUtil;
+import com.conggua.common.base.util.CollStreamUtils;
+import com.conggua.common.base.util.JwtUtils;
+import com.conggua.common.base.util.TreeUtils;
 import com.conggua.common.redis.util.RedisUtils;
 import com.conggua.common.web.model.response.CommonPage;
 import com.conggua.springboot3.server.constant.LoginConstant;
@@ -36,6 +39,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -59,6 +64,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private final PermissionService permissionService;
     private final PasswordEncoder passwordEncoder;
 
+    /**
+     * 策略上下文依赖 UserService，存在循环依赖，用 @Lazy 代理打破
+     */
+    @Autowired
+    @Lazy
+    private LoginStrategyContext loginStrategyContext;
+
     @Override
     public User save(UserSaveDTO dto) {
         User entity = new User();
@@ -76,13 +88,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public void remove(String id) {
         boolean one = this.removeById(id);
         CRUDUtil.validateDeleteSuccess(one);
+        RedisUtils.delete(RedisKey.getKeyNoTenant(RedisKey.USER_INFO, id));
     }
 
     @Override
     public User update(UserUpdateDTO dto) {
         User entity = new User();
         BeanUtils.copyProperties(dto, entity);
-        this.updateById(entity);
+        CRUDUtil.validateUpdateSuccess(this.updateById(entity));
+        RedisUtils.delete(RedisKey.getKeyNoTenant(RedisKey.USER_INFO, dto.getId()));
         return entity;
     }
 
@@ -108,7 +122,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public Map<String, String> login(UserLoginDTO dto) {
         // 登录
-        LoginStrategyContext loginStrategyContext = SpringContextUtils.getBean(LoginStrategyContext.class);
         LoginStrategy strategy = loginStrategyContext.getStrategy(dto.getType());
         return strategy.execute(dto);
     }
@@ -127,6 +140,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         String latestRefreshToken = RedisUtils.get(RedisKey.getKeyNoTenant(RedisKey.REFRESH_TOKEN, userId, deviceFingerprint), String.class);
         if (!Objects.equals(refreshToken, latestRefreshToken)) {
+            throw new BusinessException(CommonErrorEnum.NOT_LOGIN_ERROR);
+        }
+        // 用户已被删除时拒绝续期
+        if (Objects.isNull(this.getById(userId))) {
             throw new BusinessException(CommonErrorEnum.NOT_LOGIN_ERROR);
         }
         // 生成新的 AccessToken
@@ -148,6 +165,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         String deviceFingerprint = user.getDeviceFingerprint();
         RedisUtils.delete(RedisKey.getKeyNoTenant(RedisKey.ACCESS_TOKEN, userId, deviceFingerprint));
         RedisUtils.delete(RedisKey.getKeyNoTenant(RedisKey.REFRESH_TOKEN, userId, deviceFingerprint));
+        RedisUtils.delete(RedisKey.getKeyNoTenant(RedisKey.USER_INFO, userId));
     }
 
     @Override

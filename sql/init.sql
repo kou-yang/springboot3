@@ -70,7 +70,7 @@ create table sys_user
 (
     id          varchar(32) default '' not null comment '主键id'
         primary key,
-    account     varchar(64)            null comment '账号',
+    account     varchar(64)            not null comment '账号',
     password    varchar(64)            null comment '密码',
     user_name   varchar(20)            null comment '用户名',
     phone       varchar(20)            null comment '手机号',
@@ -98,7 +98,7 @@ create table sys_user_role
 create index sys_user_role_role_id_index
     on sys_user_role (role_id);
 
-create table rbac.sys_log
+create table sys_log
 (
     id       varchar(64) not null comment 'id'
         primary key,
@@ -111,7 +111,11 @@ create table rbac.sys_log
     comment '日志' row_format = COMPACT;
 
 create index sys_log_time_index
-    on rbac.sys_log (time);
+    on sys_log (time);
 
 create index sys_log_trace_id_index
-    on rbac.sys_log (trace_id);
+    on sys_log (trace_id);
+
+-- 初始管理员账号：admin / admin123，首次登录后请及时修改密码
+insert into sys_user (id, account, password, user_name, type, create_time)
+values ('1', 'admin', '$2a$12$dgHX1EqdcozRLktseRRW3e5nkcCuOdlrUrPagvjm5LhIPDiBuCtjK', '管理员', 0, now());

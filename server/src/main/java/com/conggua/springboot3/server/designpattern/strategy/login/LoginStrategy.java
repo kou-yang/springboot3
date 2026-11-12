@@ -1,7 +1,6 @@
 package com.conggua.springboot3.server.designpattern.strategy.login;
 
 import com.conggua.common.base.util.JwtUtils;
-import com.conggua.common.base.util.SpringContextUtils;
 import com.conggua.common.base.util.UUIDUtils;
 import com.conggua.common.redis.util.RedisUtils;
 import com.conggua.springboot3.server.constant.LoginConstant;
@@ -9,8 +8,6 @@ import com.conggua.springboot3.server.constant.RedisKey;
 import com.conggua.springboot3.server.model.bo.UserInfo;
 import com.conggua.springboot3.server.model.dto.UserLoginDTO;
 import com.conggua.springboot3.server.model.entity.User;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.BeanUtils;
 
 import java.util.Map;
@@ -54,21 +51,5 @@ public interface LoginStrategy {
         RedisUtils.set(RedisKey.getKeyNoTenant(RedisKey.USER_INFO, userId), userInfo, LoginConstant.REFRESH_TOKEN_EXPIRE, TimeUnit.DAYS);
 
         return Map.of("accessToken", accessToken, "refreshToken", refreshToken);
-    }
-
-    /**
-     * 存储 RefreshToken 到 Cookie
-     * @param refreshToken
-     */
-    default void setRTCookie(String refreshToken) {
-        Cookie refreshCookie = new Cookie("refreshToken", refreshToken);
-        refreshCookie.setHttpOnly(true);
-        refreshCookie.setSecure(true);
-        refreshCookie.setPath("/api/user/renewal");
-        refreshCookie.setMaxAge((int) (LoginConstant.REFRESH_TOKEN_EXPIRE * 24 * 3600));
-        HttpServletResponse response = SpringContextUtils.getHttpServletResponse();
-        response.addHeader("Set-Cookie",
-                String.format("refreshToken=%s; HttpOnly; Secure; SameSite=Strict; Path=/api/user/renewal; Max-Age=%d",
-                        refreshToken, LoginConstant.REFRESH_TOKEN_EXPIRE * 24 * 3600));
     }
 }

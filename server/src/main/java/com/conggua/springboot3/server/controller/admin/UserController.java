@@ -71,13 +71,6 @@ public class UserController {
         return ResultUtils.success(vo);
     }
 
-//    @Operation(summary = "查询全部")
-//    @GetMapping("/all")
-//    public Result<List<User>> listAll() {
-//        List<User> list = userService.list();
-//        return ResultUtils.success(list);
-//    }
-
     @Operation(summary = "登录")
     @RateLimiter(time = 60L, count = 10)
     @PostMapping("/login")

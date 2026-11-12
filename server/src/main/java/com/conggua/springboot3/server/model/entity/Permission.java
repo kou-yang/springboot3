@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @TableName("sys_permission")
-@Schema(name = "Permission", description = "$!{table.comment}")
+@Schema(name = "Permission", description = "权限")
 public class Permission implements Serializable {
 
     @Serial

@@ -18,6 +18,9 @@ public class SchedulerConfig implements SchedulingConfigurer {
         ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
         taskScheduler.setPoolSize(5);
         taskScheduler.setThreadNamePrefix("scheduled-task-");
+        // 停机时等待执行中的任务结束
+        taskScheduler.setWaitForTasksToCompleteOnShutdown(true);
+        taskScheduler.setAwaitTerminationSeconds(30);
         taskScheduler.initialize();
         taskRegistrar.setTaskScheduler(taskScheduler);
     }

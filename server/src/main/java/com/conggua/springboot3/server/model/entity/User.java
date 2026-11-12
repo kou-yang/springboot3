@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @TableName("sys_user")
-@Schema(name = "User", description = "$!{table.comment}")
+@Schema(name = "User", description = "用户")
 public class User implements Serializable {
 
     @Serial

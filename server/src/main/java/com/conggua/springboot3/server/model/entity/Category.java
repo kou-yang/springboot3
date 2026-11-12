@@ -22,7 +22,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @TableName("sys_category")
-@Schema(name = "Category", description = "$!{table.comment}")
+@Schema(name = "Category", description = "通用分类")
 public class Category implements Serializable {
 
     @Serial

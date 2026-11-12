@@ -5,8 +5,15 @@ spring:
     active: test
 server:
   port: 9999
+  shutdown: graceful
   servlet:
     context-path: /api
+# 仅暴露健康检查端点，供运维探活
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
 jwt:
   access-token-secret: 7f643862de2e315c8c778f936718041f1e57c212b5f473f9e585b6ffa8e5566b
   refresh-token-secret: 9651be41c733527809b63da1e8b252c7fd4e3b3f95fd0e0447e321a1a8d50e59
